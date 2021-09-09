@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <PackageId>ShotisTestPackage</PackageId>
+    <PackageId>MiaCore</PackageId>
     <Version>1.0.0</Version>
     <Authors>Shota Chinchaladze</Authors>
-    <Company>Shois company</Company>
+    <Company>AgencyCoda</Company>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>

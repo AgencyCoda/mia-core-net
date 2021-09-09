@@ -15,6 +15,9 @@ namespace MiaCore.JWT
         /// <returns>IServiceCollection</returns>
         public static IServiceCollection AddMiaAuthentication(this IServiceCollection services, string secret)
         {
+            if (key is null)
+                throw new ArgumentNullException(nameof(secret));
+
             var key = Encoding.ASCII.GetBytes(secret);
 
             services.AddAuthentication(x =>
