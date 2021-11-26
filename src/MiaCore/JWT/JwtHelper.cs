@@ -2,15 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
+[assembly: InternalsVisibleTo("MiaCor.UnitTests")]
 namespace MiaCore.JWT
 {
     /// <summary>
     /// Helper Class for Decoding/Validating JWT Tokens
     /// </summary>
-    public static class JwtHelper
+    internal static class JwtHelper
     {
         /// <summary>
         /// Decodes JWT Token

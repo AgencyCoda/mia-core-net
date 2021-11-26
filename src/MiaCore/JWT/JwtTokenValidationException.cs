@@ -1,8 +1,10 @@
 using System;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("MiaCor.UnitTests")]
 namespace MiaCore.JWT
 {
-    public class JwtTokenValidationException : Exception
+    internal class JwtTokenValidationException : Exception
     {
         public JwtTokenValidationException() : base()
         {

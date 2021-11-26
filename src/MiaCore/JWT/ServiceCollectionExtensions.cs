@@ -1,6 +1,8 @@
 using System;
+using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
@@ -14,8 +16,11 @@ namespace MiaCore.JWT
         /// <param name="services"></param>
         /// <param name="secret">Secret</param>
         /// <returns>IServiceCollection</returns>
-        public static IServiceCollection AddMiaAuthentication(this IServiceCollection services, string secret)
+        public static IServiceCollection AddMiaAuthentication_(this IServiceCollection services, string secret)
         {
+            services.AddControllers()
+                .PartManager.ApplicationParts.Add(new AssemblyPart(Assembly.GetExecutingAssembly()));
+
             if (secret is null)
                 throw new ArgumentNullException(nameof(secret));
 
