@@ -15,7 +15,7 @@ namespace MiaCore.Authentication
         {
             using var conn = GetConnection();
             var query = "select * from " + Tablename + " where email = @email and password = @password";
-            return await conn.QueryFirstOrDefaultAsync(query, new { email, password });
+            return await conn.QueryFirstOrDefaultAsync<MiaUser>(query, new { email, password });
         }
     }
 }

@@ -1,7 +1,8 @@
 using System.Threading.Tasks;
-using MiaCore.Infrastructure;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace MiaCore.Authentication.Login
 {
@@ -12,19 +13,21 @@ namespace MiaCore.Authentication.Login
             using var scope = context.RequestServices.CreateScope();
 
             var repo = scope.ServiceProvider.GetService<UserRepository>();
+            var mapper = scope.ServiceProvider.GetService<IMapper>();
+            var options = scope.ServiceProvider.GetService<IOptions<MiaCoreOptions>>().Value;
 
             var request = await context.Request.ReadFromJsonAsync<LoginRequest>();
 
             var user = await repo.LoginAsync(request.Email, request.Password);
+            if (user is null)
+                return;
 
-            await context.Response.WriteAsJsonAsync<MiaUser>(user);
+            var response = mapper.Map<LoginResponse>(user);
+            response.TokenType = "bearer";
+            response.AccessToken = JWT.JwtHelper.GenerateToken(options.JwtSecret, options.TokenExpirationMinutes, user.Id.ToString());
+
+            await context.Response.WriteAsJsonAsync(response);
         }
-
-        // internal async Task<MiaUser> LoginAsync(LoginRequest command)
-        // {
-        //     var user = await _userRepository.LoginAsync(command.Email, command.Password);
-        //     return user;
-        // }
 
         internal static async Task RegisterAsync(HttpContext context)
         {
@@ -38,13 +41,5 @@ namespace MiaCore.Authentication.Login
 
             await context.Response.WriteAsJsonAsync<MiaUser>(request);
         }
-
-        // internal async Task<MiaUser> RegisterAsync(MiaUser request)
-        // {
-        //     int id = await _userRepository.InsertAsync(request);
-        //     request.Id = id;
-        //     return request;
-        // }
-
     }
 }
