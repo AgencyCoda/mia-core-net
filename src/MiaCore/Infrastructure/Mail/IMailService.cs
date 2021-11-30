@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace MiaCore.Mail
+namespace MiaCore.Infrastructure.Mail
 {
     public interface IMailService
     {

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using Dapper;
 using MySql.Data.MySqlClient;
 
-namespace MiaCore.Infrastructure
+namespace MiaCore.Infrastructure.Persistence
 {
-    public abstract class BaseRepository<T>
+    public abstract class BaseRepository<T> : IGenericRepository<T>
     {
         protected readonly string _connectionString;
         protected readonly DbConnection Connection;
@@ -55,7 +55,7 @@ namespace MiaCore.Infrastructure
             return res;
         }
 
-        public virtual async Task UpdateAsync(T obj)
+        public virtual async Task<bool> UpdateAsync(T obj)
         {
             Type t = obj.GetType();
             PropertyInfo prop = t.GetProperty("Id");
@@ -74,7 +74,9 @@ namespace MiaCore.Infrastructure
 
             var cmd = $"insert into {Tablename} ({columnsToInsert}) values({columnvalues}) where id = @id";
 
-            await conn.ExecuteAsync(cmd, obj);
+            var updated = await conn.ExecuteAsync(cmd, obj);
+
+            return updated > 0;
         }
 
         public virtual async Task<bool> DeleteAsync(object id)

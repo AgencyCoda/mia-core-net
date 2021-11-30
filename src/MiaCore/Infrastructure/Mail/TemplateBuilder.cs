@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace MiaCore.Mail
+namespace MiaCore.Infrastructure.Mail
 {
     internal class TemplateBuilder
     {

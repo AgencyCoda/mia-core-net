@@ -1,13 +1,18 @@
 using AutoMapper;
-using MiaCore.Authentication;
+using MiaCore.Features;
+using MiaCore.Features.Login;
+using MiaCore.Features.Register;
+using MiaCore.Models;
 
-namespace MiaCore.MApper
+namespace MiaCore.Mapper
 {
     internal class MiaCoreMappingProfile : Profile
     {
         public MiaCoreMappingProfile()
         {
-            CreateMap<MiaUser, LoginResponse>();
+            CreateMap<MiaUser, LoginResponseDto>();
+            CreateMap<RegisterRequest, MiaUser>();
+            CreateMap<MiaUser, MiaUserDto>();
         }
     }
 }

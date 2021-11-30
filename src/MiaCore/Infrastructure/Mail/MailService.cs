@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
-namespace MiaCore.Mail
+namespace MiaCore.Infrastructure.Mail
 {
     public class MailService : IMailService
     {

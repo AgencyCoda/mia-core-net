@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MiaCore.Infrastructure
+namespace MiaCore.Infrastructure.Persistence
 {
     public interface IGenericRepository<T>
     {

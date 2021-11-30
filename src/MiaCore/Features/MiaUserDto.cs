@@ -1,8 +1,8 @@
 using System;
 
-namespace MiaCore.Authentication
+namespace MiaCore.Features
 {
-    internal class LoginResponse
+    public class MiaUserDto
     {
         public long Id { get; set; }
         public string Firstname { get; set; }
@@ -16,7 +16,5 @@ namespace MiaCore.Authentication
         public int Status { get; set; }
         public bool IsNotification { get; set; }
         public string Caption { get; set; }
-        public string TokenType { get; set; }
-        public string AccessToken { get; set; }
     }
 }

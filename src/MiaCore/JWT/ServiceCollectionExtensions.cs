@@ -18,9 +18,6 @@ namespace MiaCore.JWT
         /// <returns>IServiceCollection</returns>
         public static IServiceCollection AddMiaAuthentication_(this IServiceCollection services, string secret)
         {
-            services.AddControllers()
-                .PartManager.ApplicationParts.Add(new AssemblyPart(Assembly.GetExecutingAssembly()));
-
             if (secret is null)
                 throw new ArgumentNullException(nameof(secret));
 
