@@ -49,9 +49,10 @@ namespace MiaCore.Infrastructure.Persistence
             var columnsToInsert = String.Join(',', columns.Select(x => convertWithUnderscores(x)));
             var columnvalues = String.Join(',', columns.Select(x => "@" + x));
 
-            var cmd = $"insert into {Tablename} ({columnsToInsert}) values({columnvalues})";
+            var cmd = @$"insert into {Tablename} ({columnsToInsert}) values({columnvalues});
+                        SELECT LAST_INSERT_ID()";
 
-            var res = await conn.ExecuteAsync(cmd, obj);
+            var res = await conn.QuerySingleAsync<int>(cmd, obj);
             return res;
         }
 

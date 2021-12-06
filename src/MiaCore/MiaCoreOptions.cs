@@ -8,6 +8,7 @@ namespace MiaCore
         public string EmailFrom { get; set; }
         public string EmailFromName { get; set; }
         public string SendgridApiKey { get; set; }
+        public string FirebaseCredentialsFilePath { get; set; }
         public bool UseLoginEndpoint { get; set; } = true;
         public bool UseRegisterEndpoint { get; set; } = true;
         public bool UseRecoveryPasswordEndpoint { get; set; } = true;

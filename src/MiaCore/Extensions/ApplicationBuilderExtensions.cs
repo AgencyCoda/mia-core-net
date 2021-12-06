@@ -1,5 +1,7 @@
 using MiaCore.Features.CreateUser;
 using MiaCore.Features.FetchProfile;
+using MiaCore.Features.Firebase;
+using MiaCore.Features.GeGenerictList;
 using MiaCore.Features.Login;
 using MiaCore.Features.Register;
 using MiaCore.Features.UpdateProfile;
@@ -16,9 +18,13 @@ namespace MiaCore.Extensions
             {
                 endpoints.MapPostRequest<LoginRequest>("mia-auth/login", true);
                 endpoints.MapPostRequest<RegisterRequest>("mia-auth/register");
-                endpoints.MapPostRequest<FetchProfileRequest>("mia-auth/me");
+                endpoints.MapGetRequest<FetchProfileRequest>("mia-auth/me");
                 endpoints.MapPostRequest<SaveUserRequest>("mia-auth/user/save");
                 endpoints.MapPostRequest<UpdateProfileRequest>("mia-auth/update-profile");
+                endpoints.MapPostRequest<GeGenerictListRequest>("{entity}/list");
+                endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-firebase");
+                endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-google");
+                endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-facebook");
             });
 
             return app;

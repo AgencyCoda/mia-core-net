@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using SendGrid.Extensions.DependencyInjection;
 using MiaCore.JWT;
 using MiaCore.Utils;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 
 namespace MiaCore.Extensions
 {
@@ -30,6 +32,11 @@ namespace MiaCore.Extensions
             services.AddMiaAuthentication_(opt.JwtSecret);
             services.AddHttpContextAccessor();
             services.AddScoped<UserHelper>();
+
+            FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromFile(opt.FirebaseCredentialsFilePath),
+            });
 
             return services;
         }
