@@ -26,7 +26,7 @@ namespace MiaCore.Features.Register
         {
             var user = _mapper.Map<MiaUser>(request);
 
-            var existingUser = _userRepository.GetByEmailAsync(request.Email);
+            var existingUser = await _userRepository.GetByEmailAsync(request.Email);
             if (existingUser != null)
                 throw new Exception("Email alraedy exists");
 

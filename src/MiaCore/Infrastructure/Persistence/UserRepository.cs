@@ -7,7 +7,7 @@ namespace MiaCore.Infrastructure.Persistence
 {
     internal class UserRepository : BaseRepository<MiaUser>, IUserRepository
     {
-        public UserRepository(IOptions<MiaCoreOptions> options) : base(options.Value.ConnectionString)
+        public UserRepository(IOptions<MiaCoreOptions> options) : base(options)
         {
         }
 

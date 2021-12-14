@@ -5,19 +5,21 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Dapper;
+using MiaCore.Models;
+using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 
 namespace MiaCore.Infrastructure.Persistence
 {
-    public abstract class BaseRepository<T> : IGenericRepository<T>
+    public class BaseRepository<T> : IGenericRepository<T>
     {
         protected readonly string _connectionString;
         protected readonly DbConnection Connection;
         protected List<string> Columns;
         protected string Tablename;
-        public BaseRepository(string connectionString)
+        public BaseRepository(IOptions<MiaCoreOptions> options)
         {
-            _connectionString = connectionString;
+            _connectionString = options.Value.ConnectionString;
             Tablename = getTableName();
         }
 
@@ -45,6 +47,9 @@ namespace MiaCore.Infrastructure.Persistence
         {
             using var conn = GetConnection();
 
+            if (obj is BaseEntity entity)
+                entity.CreatedAt = DateTime.Now;
+
             var columns = getColumns();
             var columnsToInsert = String.Join(',', columns.Select(x => convertWithUnderscores(x)));
             var columnvalues = String.Join(',', columns.Select(x => "@" + x));
@@ -62,18 +67,17 @@ namespace MiaCore.Infrastructure.Persistence
             PropertyInfo prop = t.GetProperty("Id");
             object id = prop.GetValue(obj);
 
+            if (obj is BaseEntity entity)
+                entity.UpdatedAt = DateTime.Now;
+
             using var conn = GetConnection();
 
             var columns = getColumns();
-            var columnsToInsert = String.Join(',',
-                    columns.Where(x => !x.Equals("Id", StringComparison.OrdinalIgnoreCase))
-                    .Select(x => convertWithUnderscores(x)));
+            var columnsToUpdate = String.Join(',',
+                    columns.Where(x => !x.Equals("Id", StringComparison.OrdinalIgnoreCase) && !x.Equals("CreatedAt", StringComparison.OrdinalIgnoreCase))
+                    .Select(x => convertWithUnderscores(x) + " = @" + x));
 
-            var columnvalues = String.Join(',',
-                    columns.Where(x => !x.Equals("id", StringComparison.InvariantCultureIgnoreCase))
-                    .Select(x => "@" + x));
-
-            var cmd = $"insert into {Tablename} ({columnsToInsert}) values({columnvalues}) where id = @id";
+            var cmd = $"update {Tablename} set {columnsToUpdate} where id = @id";
 
             var updated = await conn.ExecuteAsync(cmd, obj);
 

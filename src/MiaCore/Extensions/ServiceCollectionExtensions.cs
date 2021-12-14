@@ -10,6 +10,7 @@ using MiaCore.JWT;
 using MiaCore.Utils;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
+using MiaCore.Models;
 
 namespace MiaCore.Extensions
 {
@@ -22,6 +23,8 @@ namespace MiaCore.Extensions
 
             services.AddOptions<MiaCoreOptions>().Configure(options);
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));
+            // services.AddScoped<IGenericRepository<MiaRecovery>, BaseRepository<MiaRecovery>>();
             services.AddSendGrid(options =>
                 {
                     options.ApiKey = opt.SendgridApiKey;

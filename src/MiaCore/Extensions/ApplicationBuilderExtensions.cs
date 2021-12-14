@@ -25,6 +25,7 @@ namespace MiaCore.Extensions
                 endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-firebase");
                 endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-google");
                 endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-facebook");
+                endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/recovery");
             });
 
             return app;
