@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace MiaCore.Models
 {
@@ -8,6 +9,7 @@ namespace MiaCore.Models
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Email { get; set; }
+        public string Password { get; set; }
         public string Photo { get; set; }
         public string Phone { get; set; }
         public string FacebookId { get; set; }
