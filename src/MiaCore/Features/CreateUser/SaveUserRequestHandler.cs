@@ -3,8 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using MiaCore.Exceptions;
 using MiaCore.Infrastructure.Persistence;
 using MiaCore.Models;
+using MiaCore.Utils;
 using Microsoft.Extensions.Options;
 
 namespace MiaCore.Features.CreateUser
@@ -26,9 +28,11 @@ namespace MiaCore.Features.CreateUser
         {
             var user = _mapper.Map<MiaUser>(request);
 
+            user.Password = Hashing.GenerateSha256(user.Password);
+
             var existingUser = await _userRepository.GetByEmailAsync(request.Email);
             if (existingUser != null && existingUser.Id != request.Id)
-                throw new Exception("Email alraedy exists");
+                throw new BadRequestException(ErrorMessages.EmailAlreadyExists);
 
             if (!request.Id.HasValue)
                 user.Id = await _userRepository.InsertAsync(user);

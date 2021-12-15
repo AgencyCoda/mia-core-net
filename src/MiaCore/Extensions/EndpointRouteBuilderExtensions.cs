@@ -3,8 +3,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
+using FluentValidation;
 using MediatR;
-using MiaCore.Features.GeGenerictList;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -50,6 +50,8 @@ namespace MiaCore.Extensions
                     JsonConvert.PopulateObject(routeJson, request);
                 }
 
+                validateRequest(scope, request);
+
                 var response = await mediator.Send(request);
 
                 await context.Response.WriteAsJsonAsync(response);
@@ -72,6 +74,26 @@ namespace MiaCore.Extensions
             T request = JsonConvert.DeserializeObject<T>(json);
 
             return Task.FromResult(request);
+        }
+
+        private static void validateRequest<T>(IServiceScope scope, T request)
+        {
+            var validators = scope.ServiceProvider.GetServices<IValidator<T>>();
+            if (validators.Any())
+            {
+                var context = new ValidationContext<T>(request);
+                var failures = validators
+                    .Select(v => v.Validate(context))
+                    .SelectMany(result => result.Errors)
+                    .Where(f => f != null)
+                    .Select(x => x.ErrorMessage)
+                    .ToList();
+
+                if (failures.Count != 0)
+                {
+                    throw new Exceptions.ValidationException(string.Join(';', failures));
+                }
+            }
         }
     }
 }

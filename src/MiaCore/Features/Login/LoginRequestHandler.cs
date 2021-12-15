@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using MiaCore.Exceptions;
 using MiaCore.Infrastructure.Persistence;
 using Microsoft.Extensions.Options;
 
@@ -25,7 +26,7 @@ namespace MiaCore.Features.Login
         {
             var user = await _userRepository.LoginAsync(request.Email, request.Password);
             if (user is null)
-                throw new UnauthorizedAccessException();
+                throw new UnauthorizedException(ErrorMessages.IncorrectPassword);
 
             var response = _mapper.Map<LoginResponseDto>(user);
             response.TokenType = "bearer";

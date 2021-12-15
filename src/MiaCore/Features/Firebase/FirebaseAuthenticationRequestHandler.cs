@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using FirebaseAdmin.Auth;
 using MediatR;
+using MiaCore.Exceptions;
 using MiaCore.Features.Login;
 using MiaCore.Infrastructure.Persistence;
 using MiaCore.Models;
@@ -32,9 +33,9 @@ namespace MiaCore.Features.Firebase
                 var decodedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(request.Token);
                 uid = decodedToken.Uid;
             }
-            catch (Exception ex)
+            catch
             {
-                throw new UnauthorizedAccessException(ex.Message);
+                throw new UnauthorizedException(ErrorMessages.InvalidFirebaseToken);
             }
             var firebaseUser = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
             var user = await _userRepository.GetByEmailAsync(firebaseUser.Email);

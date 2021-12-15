@@ -11,6 +11,8 @@ using MiaCore.Utils;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using MiaCore.Models;
+using FluentValidation;
+using MiaCore.Features.Register;
 
 namespace MiaCore.Extensions
 {
@@ -35,6 +37,8 @@ namespace MiaCore.Extensions
             services.AddMiaAuthentication_(opt.JwtSecret);
             services.AddHttpContextAccessor();
             services.AddScoped<UserHelper>();
+            services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>(includeInternalTypes: true);
+            // services.AddTransient<IValidator<RegisterRequest>, RegisterRequestValidator>();
 
             FirebaseApp.Create(new AppOptions()
             {

@@ -3,8 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using MiaCore.Exceptions;
 using MiaCore.Infrastructure.Persistence;
 using MiaCore.Models;
+using MiaCore.Utils;
 using Microsoft.Extensions.Options;
 
 namespace MiaCore.Features.Register
@@ -25,10 +27,11 @@ namespace MiaCore.Features.Register
         public async Task<MiaUserDto> Handle(RegisterRequest request, CancellationToken cancellationToken)
         {
             var user = _mapper.Map<MiaUser>(request);
+            user.Password = Hashing.GenerateSha256(user.Password);
 
             var existingUser = await _userRepository.GetByEmailAsync(request.Email);
             if (existingUser != null)
-                throw new Exception("Email alraedy exists");
+                throw new BadRequestException(ErrorMessages.EmailAlreadyExists);
 
             user.Id = await _userRepository.InsertAsync(user);
 
