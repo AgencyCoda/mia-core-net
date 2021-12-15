@@ -9,11 +9,11 @@ namespace MiaCore.Exceptions
         public MiaCoreException(int code, string message, HttpStatusCode statusCode) : base(message)
         {
             Code = code;
+            StatusCode = statusCode;
         }
 
-        public MiaCoreException(KeyValuePair<int, string> error, HttpStatusCode statusCode) : base(error.Value)
+        public MiaCoreException(KeyValuePair<int, string> error, HttpStatusCode statusCode) : this(error.Key, error.Value, statusCode)
         {
-            Code = error.Key;
         }
 
         public int Code { get; private set; }
