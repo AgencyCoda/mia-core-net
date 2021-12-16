@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
@@ -11,13 +12,13 @@ using MySql.Data.MySqlClient;
 
 namespace MiaCore.Infrastructure.Persistence
 {
-    public class BaseRepository<T> : IGenericRepository<T>
+    public class GenericRepository<T> : IGenericRepository<T> where T : IEntity
     {
         protected readonly string _connectionString;
         protected readonly DbConnection Connection;
         protected List<string> Columns;
         protected string Tablename;
-        public BaseRepository(IOptions<MiaCoreOptions> options)
+        public GenericRepository(IOptions<MiaCoreOptions> options)
         {
             _connectionString = options.Value.ConnectionString;
             Tablename = getTableName();
@@ -41,6 +42,85 @@ namespace MiaCore.Infrastructure.Persistence
             using var conn = GetConnection();
             var query = "select * from " + Tablename;
             return await conn.QueryAsync<T>(query);
+        }
+
+        public async Task<IEnumerable<T>> GetListAsync(string[] relatedEntities, int? limit, int? page, List<Where> wheres, List<Order> orders)
+        {
+            using var conn = GetConnection();
+
+            var type = typeof(T);
+
+            var types = new Type[(relatedEntities?.Length ?? 0) + 1];
+            types[0] = (type);
+
+            int i = 0;
+
+            var queryBuilder = new DynamicQueryBuilder(type.Name);
+
+            if (relatedEntities != null)
+                foreach (var item in relatedEntities)
+                {
+                    var propType = type.GetProperty(item)?.PropertyType;
+                    if (propType is null)
+                        throw new Exception($"Error.Field: {item} not found");
+
+                    var propertyIsList = false;
+                    if (typeof(IEnumerable).IsAssignableFrom(propType))
+                    {
+                        propertyIsList = true;
+                        propType = propType.GenericTypeArguments[0];
+                    }
+
+                    if (!propertyIsList)
+                        queryBuilder.WithOne(propType.Name);
+                    else
+                        queryBuilder.WithMany(propType.Name);
+
+                    types[i + 1] = propType;
+                    i += 1;
+                }
+
+            var query = queryBuilder
+                    .Where(wheres)
+                    .OrderBy(orders)
+                    .WithLimit(limit, page)
+                    .Build();
+
+
+            var dic = new Dictionary<string, object>();
+
+            var list = await conn.QueryAsync(query, types, obj =>
+            {
+                string id = obj[0].GetType().GetProperty("Id").GetValue(obj[0]).ToString();
+                object currObj;
+                if (dic.TryGetValue(id, out currObj))
+                    obj[0] = currObj;
+                else
+                    dic.Add(id, obj[0]);
+
+                if (relatedEntities != null)
+                    for (int i = 0; i < relatedEntities.Length; i++)
+                    {
+                        var prop = obj[0].GetType().GetProperty(relatedEntities[0]);
+                        if (typeof(IEnumerable).IsAssignableFrom(prop.PropertyType))
+                        {
+                            var res = prop.GetValue(obj[0]) as IList;
+                            if (res is null)
+                            {
+                                Type t = typeof(List<>).MakeGenericType(prop.PropertyType.GenericTypeArguments[0]);
+                                res = (IList)Activator.CreateInstance(t);
+                                prop.SetValue(obj[0], res);
+                            }
+                            res.Add(obj[i + 1]);
+                        }
+                        else
+                            prop.SetValue(obj[0], obj[i + 1]);
+                    }
+                return (T)obj[0];
+            }
+            // , splitOn: relatedEntities.Length > 0 ? splitColumns : null
+            );
+            return list.Distinct();
         }
 
         public virtual async Task<int> InsertAsync(T obj)

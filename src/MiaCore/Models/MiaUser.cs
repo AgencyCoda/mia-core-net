@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MiaCore.Models
 {
-    public class MiaUser : BaseEntity
+    public class MiaUser : BaseEntity, IEntity
     {
         public long Id { get; set; }
         public string Firstname { get; set; }

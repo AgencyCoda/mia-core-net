@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace MiaCore.Infrastructure.Persistence
 {
-    internal class UserRepository : BaseRepository<MiaUser>, IUserRepository
+    internal class UserRepository : GenericRepository<MiaUser>, IUserRepository
     {
         public UserRepository(IOptions<MiaCoreOptions> options) : base(options)
         {
