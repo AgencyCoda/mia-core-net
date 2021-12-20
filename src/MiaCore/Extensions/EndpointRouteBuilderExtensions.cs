@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -6,6 +7,9 @@ using System.Threading.Tasks;
 using System.Web;
 using FluentValidation;
 using MediatR;
+using MiaCore.Exceptions;
+using MiaCore.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -16,19 +20,21 @@ namespace MiaCore.Extensions
 {
     internal static class EndpointRouteBuilderExtensions
     {
-        internal static void MapPostRequest<T>(this IEndpointRouteBuilder endpoint, string pattern, bool allowAnonymous = false) where T : IBaseRequest, new()
+        internal static void MapPostRequest<T>(this IEndpointRouteBuilder endpoint, string pattern, bool allowAnonymous = false, List<int> roles = null) where T : IBaseRequest, new()
         {
-            var action = generateAction<T>(parsePostRequest<T>);
+            var action = generateAction<T>(parsePostRequest<T>, roles);
             var e = endpoint.MapPost(pattern, action);
             if (allowAnonymous)
                 e.AllowAnonymous();
             else
+            {
                 e.RequireAuthorization();
+            }
         }
 
-        internal static void MapGetRequest<T>(this IEndpointRouteBuilder endpoint, string pattern, bool allowAnonymous = false) where T : IBaseRequest, new()
+        internal static void MapGetRequest<T>(this IEndpointRouteBuilder endpoint, string pattern, bool allowAnonymous = false, List<int> roles = null) where T : IBaseRequest, new()
         {
-            var action = generateAction<T>(parseGetRequest<T>);
+            var action = generateAction<T>(parseGetRequest<T>, roles);
             var e = endpoint.MapGet(pattern, action);
             if (allowAnonymous)
                 e.AllowAnonymous();
@@ -36,15 +42,24 @@ namespace MiaCore.Extensions
                 e.RequireAuthorization();
         }
 
-        private static RequestDelegate generateAction<T>(Func<HttpContext, Task<T>> parseFunction) where T : IBaseRequest, new()
+        private static RequestDelegate generateAction<T>(Func<HttpContext, JsonSerializerOptions, Task<T>> parseFunction, List<int> roles) where T : IBaseRequest, new()
         {
             RequestDelegate action = async (HttpContext context) =>
             {
                 using var scope = context.RequestServices.CreateScope();
 
+                var userHelper = scope.ServiceProvider.GetService<UserHelper>();
+                await checkRolesAsync(roles, userHelper);
+
+                var options = new JsonSerializerOptions();
+                var snakeCasePolicy = new SnakeCaseNamingPolicy();
+                options.PropertyNamingPolicy = snakeCasePolicy;//JsonNamingPolicy.CamelCase;
+                options.PropertyNameCaseInsensitive = true;
+                options.Converters.Add(new JsonStringEnumConverter(snakeCasePolicy));
+
                 var mediator = scope.ServiceProvider.GetService<IMediator>();
 
-                var request = await parseFunction(context);
+                var request = await parseFunction(context, options);
 
                 if (context.Request.RouteValues.Any())
                 {
@@ -56,31 +71,26 @@ namespace MiaCore.Extensions
 
                 var response = await mediator.Send(request);
 
-                await context.Response.WriteAsJsonAsync(response);
+                await context.Response.WriteAsJsonAsync(response, options);
             };
             return action;
         }
 
-        private static async Task<T> parsePostRequest<T>(HttpContext context) where T : IBaseRequest, new()
+        private static async Task<T> parsePostRequest<T>(HttpContext context, JsonSerializerOptions options) where T : IBaseRequest, new()
         {
-            var options = new JsonSerializerOptions();
-            options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            options.PropertyNameCaseInsensitive = true;
-            options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
-
             var request = context.Request.HasJsonContentType() ? await context.Request.ReadFromJsonAsync<T>(options) : new T();
             return request;
         }
 
 
-        private static Task<T> parseGetRequest<T>(HttpContext context) where T : IBaseRequest, new()
+        private static Task<T> parseGetRequest<T>(HttpContext context, JsonSerializerOptions options) where T : IBaseRequest, new()
         {
             var enumConverter = new Newtonsoft.Json.Converters.StringEnumConverter();
 
             string responseString = context.Request.QueryString.Value;
             var dict = HttpUtility.ParseQueryString(responseString);
-            string json = JsonConvert.SerializeObject(dict.Cast<string>().ToDictionary(k => k, v => dict[v]));
-            T request = JsonConvert.DeserializeObject<T>(json, enumConverter);
+            string json = System.Text.Json.JsonSerializer.Serialize(dict.Cast<string>().ToDictionary(k => k, v => dict[v]));
+            T request = System.Text.Json.JsonSerializer.Deserialize<T>(json, options);
 
             return Task.FromResult(request);
         }
@@ -103,6 +113,17 @@ namespace MiaCore.Extensions
                     throw new Exceptions.ValidationException(string.Join(';', failures));
                 }
             }
+        }
+
+        private static async Task checkRolesAsync(List<int> roles, UserHelper userHelper)
+        {
+            if (roles is null || !roles.Any())
+                return;
+
+            var user = await userHelper.GetUserAsync();
+
+            if (!roles.Contains(user.Role))
+                throw new UnauthorizedException(ErrorMessages.NoAccessToResource);
         }
     }
 }
