@@ -11,6 +11,8 @@ namespace MiaCore.Infrastructure.Persistence
         private string _where;
         private string _limit;
         private string _order;
+        private bool _isCount;
+
 
         public DynamicQueryBuilder(string tableName)
         {
@@ -20,6 +22,7 @@ namespace MiaCore.Infrastructure.Persistence
             _where = "";
             _limit = "";
             _order = "";
+            _isCount = false;
         }
 
         public DynamicQueryBuilder WithOne(string tableName)
@@ -68,10 +71,21 @@ namespace MiaCore.Infrastructure.Persistence
                 _limit = $"limit {((page ?? 0) <= 0 ? 0 : page - 1) * limit},{limit}";
             return this;
         }
+
+        public DynamicQueryBuilder WithCount()
+        {
+            _isCount = true;
+            return this;
+        }
+
         public string Build()
         {
-            return $"{_select} {_from} {_where} {_order} {_limit}";
+            var select = _isCount ? "select count(1) Count" : _select;
+            var limit = _isCount ? "" : _limit;
+
+            return $"{select} {_from} {_where} {_order} {limit}";
         }
+
         private string getTableName(string name)
             => string.Concat(name.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString())).ToLower();
 

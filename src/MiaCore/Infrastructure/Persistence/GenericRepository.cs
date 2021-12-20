@@ -12,7 +12,7 @@ using MySql.Data.MySqlClient;
 
 namespace MiaCore.Infrastructure.Persistence
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : IEntity
+    internal class GenericRepository<T> : IGenericRepository<T> where T : IEntity
     {
         protected readonly string _connectionString;
         protected readonly DbConnection Connection;
@@ -44,7 +44,7 @@ namespace MiaCore.Infrastructure.Persistence
             return await conn.QueryAsync<T>(query);
         }
 
-        public async Task<IEnumerable<T>> GetListAsync(string[] relatedEntities, int? limit, int? page, List<Where> wheres, List<Order> orders)
+        public async Task<GenericListResponse<T>> GetListAsync(string[] relatedEntities, int? limit, int? page, List<Where> wheres, List<Order> orders)
         {
             using var conn = GetConnection();
 
@@ -80,14 +80,21 @@ namespace MiaCore.Infrastructure.Persistence
                     i += 1;
                 }
 
-            var query = queryBuilder
+            queryBuilder = queryBuilder
                     .Where(wheres)
                     .OrderBy(orders)
-                    .WithLimit(limit, page)
-                    .Build();
+                    .WithLimit(limit, page);
+
+            var query = queryBuilder
+                .Build();
+
+            var countQuery = queryBuilder
+                .WithCount()
+                .Build();
 
 
             var dic = new Dictionary<string, object>();
+            var count = await conn.ExecuteScalarAsync<long>(countQuery);
 
             var list = await conn.QueryAsync(query, types, obj =>
             {
@@ -120,7 +127,15 @@ namespace MiaCore.Infrastructure.Persistence
             }
             // , splitOn: relatedEntities.Length > 0 ? splitColumns : null
             );
-            return list.Distinct();
+            var result = new GenericListResponse<T>
+            {
+                Total = count,
+                Data = list,
+                CurrentPage = page is null || page <= 0 ? 1 : page.Value,
+                PerPage = limit ?? 0
+            };
+
+            return result;
         }
 
         public virtual async Task<int> InsertAsync(T obj)

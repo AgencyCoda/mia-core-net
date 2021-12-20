@@ -8,7 +8,7 @@ using MiaCore.Utils;
 
 namespace MiaCore.Features.GenerictList
 {
-    public class GenerictListRequestHandler<T> : IRequestHandler<GenerictListRequest<T>, object> where T : IEntity
+    internal class GenerictListRequestHandler<T> : IRequestHandler<GenerictListRequest<T>, object> where T : IEntity
     {
         private readonly IGenericRepository<T> _repository;
         public GenerictListRequestHandler(IGenericRepository<T> repository)
