@@ -5,7 +5,7 @@ namespace MiaCore.Exceptions
 {
     public class BadRequestException : MiaCoreException
     {
-        public BadRequestException(KeyValuePair<int, string> error) : base(error.Key, error.Value, HttpStatusCode.Unauthorized)
+        public BadRequestException(KeyValuePair<int, string> error) : base(error.Key, error.Value, HttpStatusCode.BadRequest)
         {
         }
     }
