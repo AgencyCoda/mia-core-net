@@ -27,8 +27,9 @@ namespace MiaCore.Features.UpdateProfile
 
         public async Task<MiaUserDto> Handle(UpdateProfileRequest request, CancellationToken cancellationToken)
         {
-            var user = _mapper.Map<MiaUser>(request);
-            user.Id = _userHepler.GetUserId();
+            var user = await _userHepler.GetUserAsync();
+
+            user = _mapper.Map<UpdateProfileRequest, MiaUser>(request, user);
 
             await _userRepository.UpdateAsync(user);
 
