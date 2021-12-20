@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using MiaCore.Features.AssignCategoryToUser;
 using MiaCore.Features.CreateUser;
 using MiaCore.Features.FetchProfile;
 using MiaCore.Features.Firebase;
@@ -6,6 +8,7 @@ using MiaCore.Features.Login;
 using MiaCore.Features.Register;
 using MiaCore.Features.UpdateProfile;
 using MiaCore.Models;
+using MiaCore.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
@@ -20,16 +23,17 @@ namespace MiaCore.Extensions
                 endpoints.MapPostRequest<LoginRequest>("mia-auth/login", true);
                 endpoints.MapPostRequest<RegisterRequest>("mia-auth/register", true);
                 endpoints.MapGetRequest<FetchProfileRequest>("mia-auth/me");
-                endpoints.MapPostRequest<SaveUserRequest>("mia-auth/user/save");
+                endpoints.MapPostRequest<SaveUserRequest>("mia-auth/user/save", roles: Roles.Admin);
                 endpoints.MapPostRequest<UpdateProfileRequest>("mia-auth/update-profile");
                 endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-firebase");
                 endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-google");
                 endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-facebook");
                 endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/recovery");
-                endpoints.MapPostRequest<GenerictListRequest<MiaUser>>("user/list");
+                endpoints.MapPostRequest<GenerictListRequest<MiaUser>>("mia-auth/user/list");
                 endpoints.MapPostRequest<GenerictListRequest<MiaCurrency>>("mia-currency/list", true);
                 endpoints.MapPostRequest<GenerictListRequest<MiaCategory>>("mia-category/list", true);
                 endpoints.MapPostRequest<GenerictListRequest<News>>("news/list", true);
+                // endpoints.MapPostRequest<AssignCategoryToUserRequest>("mia-category/assign-to-user");
             });
 
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
