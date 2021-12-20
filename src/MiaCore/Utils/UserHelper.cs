@@ -11,6 +11,8 @@ namespace MiaCore.Utils
     {
         private readonly HttpContext _context;
         private readonly IUserRepository _userRepository;
+        private MiaUser _curentUser;
+
         public UserHelper(IHttpContextAccessor contextAccessor, IUserRepository userRepository)
         {
             _context = contextAccessor.HttpContext;
@@ -26,6 +28,9 @@ namespace MiaCore.Utils
 
         public async Task<MiaUser> GetUserAsync()
         {
+            if (_curentUser != null)
+                return _curentUser;
+
             var id = GetUserId();
 
             var user = await _userRepository.GetAsync(id);
@@ -33,7 +38,7 @@ namespace MiaCore.Utils
             if (user is null)
                 throw new UnauthorizedException(ErrorMessages.UserIsNotAuthenticated);
 
-            return user;
+            return _curentUser = user;
         }
     }
 }
