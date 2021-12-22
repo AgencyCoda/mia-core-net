@@ -52,6 +52,7 @@ namespace MiaCore.Extensions
             services.AddHttpContextAccessor();
             services.AddScoped<UserHelper>();
             services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>(includeInternalTypes: true);
+            services.AddScoped<TemplateBuilder>();
 
             FirebaseApp.Create(new AppOptions()
             {

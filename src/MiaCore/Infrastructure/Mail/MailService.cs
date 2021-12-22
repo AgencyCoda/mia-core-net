@@ -8,11 +8,13 @@ namespace MiaCore.Infrastructure.Mail
     public class MailService : IMailService
     {
         private readonly ISendGridClient _client;
+        private readonly TemplateBuilder _templateBuilder;
         private readonly MiaCoreOptions _options;
-        public MailService(ISendGridClient client, IOptions<MiaCoreOptions> options)
+        public MailService(ISendGridClient client, TemplateBuilder templateBuilder, IOptions<MiaCoreOptions> options)
         {
             _client = client;
             _options = options.Value;
+            _templateBuilder = templateBuilder;
         }
         public async Task SendAsync(string to, string subject, string message)
         {
@@ -26,9 +28,10 @@ namespace MiaCore.Infrastructure.Mail
 
             var res = await _client.SendEmailAsync(msg);
         }
-        public async Task SendAsync(string to, string subject, string fileName, object args)
+
+        public async Task SendAsync(string to, string subject, string templateSlug, object args)
         {
-            var html = await TemplateBuilder.BuildAsync(fileName, args);
+            var html = await _templateBuilder.BuildAsync(templateSlug, args);
             var msg = new SendGridMessage()
             {
                 From = new EmailAddress(_options.EmailFrom, _options.EmailFromName),
@@ -40,9 +43,9 @@ namespace MiaCore.Infrastructure.Mail
             var res = await _client.SendEmailAsync(msg);
         }
 
-        public void SendInBackground(string to, string subject, string fileName, object args)
+        public void SendInBackground(string to, string subject, string templateSlug, object args)
         {
-            _ = Task.Run(async () => await SendAsync(to, subject, fileName, args));
+            _ = Task.Run(async () => await SendAsync(to, subject, templateSlug, args));
         }
 
         public void SendInBackground(string to, string subject, string message)

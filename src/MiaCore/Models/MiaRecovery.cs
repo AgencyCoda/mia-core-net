@@ -6,7 +6,6 @@ namespace MiaCore.Models
     {
         public long Id { get; set; }
         public long UserId { get; set; }
-        public MiaUser User { get; set; }
         public string Token { get; set; }
         public int Status { get; set; }
     }

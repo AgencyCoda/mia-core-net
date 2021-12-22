@@ -5,7 +5,9 @@ using MiaCore.Features.FetchProfile;
 using MiaCore.Features.Firebase;
 using MiaCore.Features.GenerictList;
 using MiaCore.Features.Login;
+using MiaCore.Features.RecoveryPassword;
 using MiaCore.Features.Register;
+using MiaCore.Features.SaveCategory;
 using MiaCore.Features.UpdateProfile;
 using MiaCore.Models;
 using MiaCore.Utils;
@@ -28,12 +30,13 @@ namespace MiaCore.Extensions
                 endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-firebase");
                 endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-google");
                 endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-facebook");
-                endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/recovery");
+                endpoints.MapPostRequest<RecoveryPasswordRequest>("mia-auth/recovery");
                 endpoints.MapPostRequest<GenerictListRequest<MiaUser>>("mia-auth/user/list");
                 endpoints.MapPostRequest<GenerictListRequest<MiaCurrency>>("mia-currency/list", true);
                 endpoints.MapPostRequest<GenerictListRequest<MiaCategory>>("mia-category/list", true);
                 endpoints.MapPostRequest<GenerictListRequest<News>>("news/list", true);
-                // endpoints.MapPostRequest<AssignCategoryToUserRequest>("mia-category/assign-to-user");
+                endpoints.MapPostRequest<SaveCategoryRequest>("mia-category/save", roles: Roles.Admin);
+                endpoints.MapPostRequest<AssignCategoryToUserRequest>("mia-category/assign-to-user");
             });
 
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;

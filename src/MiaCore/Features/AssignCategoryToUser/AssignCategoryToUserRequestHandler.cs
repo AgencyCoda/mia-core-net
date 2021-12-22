@@ -1,3 +1,5 @@
+using System;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -26,6 +28,14 @@ namespace MiaCore.Features.AssignCategoryToUser
             var userId = _userHelper.GetUserId();
             if (await _categoryRepository.GetAsync(request.CategoryId) is null)
                 return false;
+
+            var existing = await _userCategoryRepository.GetByAsync(
+                new Where(nameof(MiaUserCategory.UserId), userId),
+                new Where(nameof(MiaUserCategory.CategoryId), request.CategoryId)
+                );
+
+            if (existing != null)
+                return true;
 
             var userCategory = new MiaUserCategory
             {

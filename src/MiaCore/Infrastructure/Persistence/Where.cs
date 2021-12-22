@@ -2,7 +2,12 @@ namespace MiaCore.Infrastructure.Persistence
 {
     public class Where
     {
-        public WhereConditionType Type { get; set; }
+        public Where(string key, object value)
+        {
+            Key = key;
+            Value = value.ToString();
+        }
+        public WhereConditionType Type { get; set; } = WhereConditionType.Equal;
         public string Key { get; set; }
         public string Value { get; set; }
     }

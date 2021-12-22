@@ -3,6 +3,7 @@ using MiaCore.Features;
 using MiaCore.Features.CreateUser;
 using MiaCore.Features.Login;
 using MiaCore.Features.Register;
+using MiaCore.Features.SaveCategory;
 using MiaCore.Features.UpdateProfile;
 using MiaCore.Models;
 
@@ -17,6 +18,8 @@ namespace MiaCore.Mapper
             CreateMap<SaveUserRequest, MiaUser>();
             CreateMap<UpdateProfileRequest, MiaUser>();
             CreateMap<MiaUser, MiaUserDto>();
+            CreateMap<SaveCategoryRequest, MiaCategory>();
+            CreateMap<MiaCategory, CategoryDto>();
         }
     }
 }

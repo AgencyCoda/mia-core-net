@@ -18,9 +18,9 @@ namespace MiaCore.Utils
             _context = contextAccessor.HttpContext;
             _userRepository = userRepository;
         }
-        public int GetUserId()
+        public long GetUserId()
         {
-            if (int.TryParse(_context.User.Identity.Name, out int id))
+            if (long.TryParse(_context.User.Identity.Name, out long id))
                 return id;
 
             throw new UnauthorizedException(ErrorMessages.UserIsNotAuthenticated);

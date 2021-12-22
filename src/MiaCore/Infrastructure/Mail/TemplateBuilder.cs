@@ -1,32 +1,32 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using MiaCore.Infrastructure.Persistence;
+using MiaCore.Models;
 
 namespace MiaCore.Infrastructure.Mail
 {
-    internal class TemplateBuilder
+    public class TemplateBuilder
     {
-        public static async Task<string> BuildAsync(string fileName, object args)
+        private readonly IGenericRepository<MiaEmailTemplate> _templateRepository;
+        public TemplateBuilder(IGenericRepository<MiaEmailTemplate> templateRepository)
         {
-            var html = await readFromFileAsync(fileName);
-            html = replace(html, args);
+            _templateRepository = templateRepository;
+        }
+        public async Task<string> BuildAsync(string templateSlug, object args)
+        {
+            var template = await _templateRepository.GetByAsync(new Where(nameof(MiaEmailTemplate.Slug), templateSlug));
+            if (template is null)
+                throw new Exception("template not found");
+
+            string html = replace(template.ContentText, args);
             return html;
         }
 
-        private static async Task<string> readFromFileAsync(string fileName)
-        {
-            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), $"EmailTemplates/{fileName}");
-            if (!File.Exists(path))
-            {
-                throw new System.Exception("html template not found");
-            }
-            var html = await File.ReadAllTextAsync(path);
-            return html;
-        }
-
-        private static string replace(string str, object args)
+        private string replace(string str, object args)
         {
             var dictionary = convertToDictionary(args);
 
@@ -37,7 +37,7 @@ namespace MiaCore.Infrastructure.Mail
             return str;
         }
 
-        private static Dictionary<string, object> convertToDictionary(object obj)
+        private Dictionary<string, object> convertToDictionary(object obj)
         {
             var dictionary = new Dictionary<string, object>();
             foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(obj))

@@ -26,7 +26,7 @@ namespace MiaCore.Features.FetchProfile
 
         public async Task<MiaUserDto> Handle(FetchProfileRequest request, CancellationToken cancellationToken)
         {
-            int id = _userHelper.GetUserId();
+            long id = _userHelper.GetUserId();
             var user = await _userRepository.GetAsync(id);
             var result = _mapper.Map<MiaUserDto>(user);
 

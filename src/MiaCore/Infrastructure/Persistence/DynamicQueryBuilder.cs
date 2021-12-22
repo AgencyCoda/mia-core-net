@@ -16,7 +16,7 @@ namespace MiaCore.Infrastructure.Persistence
 
         public DynamicQueryBuilder(string tableName)
         {
-            _table = getTableName(tableName);
+            _table = convertName(tableName);
             _select = $"SELECT {_table}.*";
             _from = $"from {_table}";
             _where = "";
@@ -27,7 +27,7 @@ namespace MiaCore.Infrastructure.Persistence
 
         public DynamicQueryBuilder WithOne(string tableName)
         {
-            tableName = getTableName(tableName);
+            tableName = convertName(tableName);
             _select += $",{tableName}.*";
             _from += $" left join {tableName} on {tableName}.id = {_table}.{getColumnName(tableName)}";
             return this;
@@ -35,7 +35,7 @@ namespace MiaCore.Infrastructure.Persistence
 
         public DynamicQueryBuilder WithMany(string tableName)
         {
-            tableName = getTableName(tableName);
+            tableName = convertName(tableName);
             _select += $",{tableName}.*";
             _from += $" left join {tableName} on {tableName}.{getColumnName(_table)} = {_table}.id";
             return this;
@@ -49,7 +49,7 @@ namespace MiaCore.Infrastructure.Persistence
                     _where += !_where.StartsWith("where") ? "where" : " and";
                     if (!long.TryParse(where.Value, out _))
                         where.Value = $"\"{where.Value}\"";
-                    _where += $" {_table}.{where.Key} = {where.Value}";
+                    _where += $" {_table}.{convertName(where.Key)} = {where.Value}";
                 }
             return this;
         }
@@ -86,14 +86,14 @@ namespace MiaCore.Infrastructure.Persistence
             return $"{select} {_from} {_where} {_order} {limit}";
         }
 
-        private string getTableName(string name)
+        private string convertName(string name)
             => string.Concat(name.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString())).ToLower();
 
-        private string getColumnName(string name)
+        private string getColumnName(string tableName)
         {
-            name = getTableName(name);
-            name = name.StartsWith("mia_") ? name.Substring(4) : name;
-            return name + "_id";
+            tableName = convertName(tableName);
+            tableName = tableName.StartsWith("mia_") ? tableName.Substring(4) : tableName;
+            return tableName + "_id";
         }
     }
 }

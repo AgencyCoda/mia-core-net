@@ -36,6 +36,17 @@ namespace MiaCore.Infrastructure.Persistence
             var result = await conn.QueryFirstOrDefaultAsync<T>(query, new { id });
             return result;
         }
+        public virtual async Task<T> GetByAsync(params Where[] filters)
+        {
+            using var conn = GetConnection();
+            var queryBuilder = new DynamicQueryBuilder(typeof(T).Name);
+            var query = queryBuilder
+                .Where(filters.ToList())
+                .WithLimit(1, 1)
+                .Build();
+
+            return await conn.QueryFirstOrDefaultAsync<T>(query);
+        }
 
         public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
