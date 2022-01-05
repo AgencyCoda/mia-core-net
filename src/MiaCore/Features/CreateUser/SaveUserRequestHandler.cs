@@ -28,7 +28,8 @@ namespace MiaCore.Features.CreateUser
         {
             var user = _mapper.Map<MiaUser>(request);
 
-            user.Password = Hashing.GenerateSha256(user.Password);
+            if (!string.IsNullOrEmpty(user.Password))
+                user.Password = Hashing.GenerateSha256(user.Password);
 
             var existingUser = await _userRepository.GetByEmailAsync(request.Email);
             if (existingUser != null && existingUser.Id != request.Id)
@@ -37,7 +38,12 @@ namespace MiaCore.Features.CreateUser
             if (!request.Id.HasValue)
                 user.Id = await _userRepository.InsertAsync(user);
             else
+            {
+                if (string.IsNullOrEmpty(user.Password) && existingUser != null)
+                    user.Password = existingUser.Password;
+
                 await _userRepository.UpdateAsync(user);
+            }
 
             var response = _mapper.Map<MiaUserDto>(user);
             return response;
