@@ -11,5 +11,7 @@ namespace MiaCore.Exceptions
         public static KeyValuePair<int, string> ValidationFailed { get; } = new KeyValuePair<int, string>(-7, "Validation Failed");
         public static KeyValuePair<int, string> ResourceNotFound { get; } = new KeyValuePair<int, string>(-8, "{0} not found");
         public static KeyValuePair<int, string> NoAccessToResource { get; } = new KeyValuePair<int, string>(-9, "You don't have access to this resource");
+        public static KeyValuePair<int, string> EmailNotExists { get; } = new KeyValuePair<int, string>(-10, "Email is not exist");
+        public static KeyValuePair<int, string> TokenNotValid { get; } = new KeyValuePair<int, string>(-10, "Token is not valid");
     }
 }
