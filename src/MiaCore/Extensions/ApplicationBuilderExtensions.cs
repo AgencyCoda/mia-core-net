@@ -32,7 +32,7 @@ namespace MiaCore.Extensions
                 endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-facebook");
                 endpoints.MapPostRequest<RecoveryPasswordRequest>("mia-auth/recovery");
                 endpoints.MapPostRequest<ChangePasswordRecoveryRequest>("mia-auth/change-password-recovery");
-                endpoints.MapPostRequest<GenerictListRequest<MiaUser>>("mia-auth/user/list");
+                endpoints.MapPostRequest<GenerictListRequest<MiaUser>>("mia-auth/user/list", roles: Roles.Admin);
                 endpoints.MapPostRequest<GenerictListRequest<MiaCurrency>>("mia-currency/list", true);
                 endpoints.MapPostRequest<GenerictListRequest<MiaCategory>>("mia-category/list", true);
                 endpoints.MapPostRequest<GenerictListRequest<News>>("news/list", true);
