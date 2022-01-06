@@ -8,6 +8,8 @@ namespace MiaCore.Infrastructure.Persistence
     {
         Task<T> GetAsync(object id);
         Task<T> GetByAsync(params Where[] filters);
+        Task<T> GetFirstByAsync(params Where[] filters);
+        Task<T> GetLastByAsync(params Where[] filters);
         Task<IEnumerable<T>> GetAllAsync();
         Task<GenericListResponse<T>> GetListAsync(string[] relatedEntities, int? limit, int? page, List<Where> wheres, List<Order> orders);
         Task<int> InsertAsync(T obj);
