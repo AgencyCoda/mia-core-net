@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using MiaCore.Features.AssignCategoryToUser;
+using MiaCore.Features.CreateGetAccount;
 using MiaCore.Features.CreateUser;
 using MiaCore.Features.CurrentUserPlan;
 using MiaCore.Features.FetchProfile;
 using MiaCore.Features.Firebase;
 using MiaCore.Features.GenerictList;
+using MiaCore.Features.GetDashboardStats;
 using MiaCore.Features.Login;
 using MiaCore.Features.RecoveryPassword;
 using MiaCore.Features.Register;
@@ -41,6 +43,8 @@ namespace MiaCore.Extensions
                 endpoints.MapPostRequest<AssignCategoryToUserRequest>("mia-category/assign-to-user");
                 endpoints.MapPostRequest<GenerictListRequest<MiaUserPlan>>("mia-auth/user/plan/list", roles: Roles.Admin);
                 endpoints.MapPostRequest<CurrentUserPlanRequest>("mia-auth/user/plan/current/{id}", roles: Roles.Admin);
+                endpoints.MapGetRequest<GetDashboardStatsRequest>("dashboard/stats", roles: Roles.Admin);
+                endpoints.MapGetRequest<CreateGetAccountRequest>("account/me");
             });
 
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
