@@ -11,6 +11,7 @@ using MiaCore.Features.Login;
 using MiaCore.Features.RecoveryPassword;
 using MiaCore.Features.Register;
 using MiaCore.Features.SaveCategory;
+using MiaCore.Features.TransferList;
 using MiaCore.Features.UpdateProfile;
 using MiaCore.Models;
 using MiaCore.Utils;
@@ -45,6 +46,7 @@ namespace MiaCore.Extensions
                 endpoints.MapPostRequest<CurrentUserPlanRequest>("mia-auth/user/plan/current/{id}", roles: Roles.Admin);
                 endpoints.MapGetRequest<GetDashboardStatsRequest>("dashboard/stats", roles: Roles.Admin);
                 endpoints.MapGetRequest<CreateGetAccountRequest>("account/me");
+                endpoints.MapGetRequest<TransferListRequest>("transfer/list");
             });
 
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
