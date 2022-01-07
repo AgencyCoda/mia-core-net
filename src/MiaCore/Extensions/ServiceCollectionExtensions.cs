@@ -27,6 +27,7 @@ namespace MiaCore.Extensions
 
             services.AddOptions<MiaCoreOptions>().Configure(options);
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IDashboardRepository, DashboardRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddSendGrid(options =>
                 {

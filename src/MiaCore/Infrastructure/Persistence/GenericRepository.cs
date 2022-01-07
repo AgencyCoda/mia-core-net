@@ -12,21 +12,13 @@ using MySql.Data.MySqlClient;
 
 namespace MiaCore.Infrastructure.Persistence
 {
-    internal class GenericRepository<T> : IGenericRepository<T> where T : IEntity
+    internal class GenericRepository<T> : BaseRepository, IGenericRepository<T> where T : IEntity
     {
-        protected readonly string _connectionString;
-        protected readonly DbConnection Connection;
         protected List<string> Columns;
         protected string Tablename;
-        public GenericRepository(IOptions<MiaCoreOptions> options)
+        public GenericRepository(IOptions<MiaCoreOptions> options) : base(options)
         {
-            _connectionString = options.Value.ConnectionString;
             Tablename = getTableName();
-        }
-
-        protected DbConnection GetConnection()
-        {
-            return new MySqlConnection(_connectionString);
         }
 
         public virtual async Task<T> GetAsync(object id)
