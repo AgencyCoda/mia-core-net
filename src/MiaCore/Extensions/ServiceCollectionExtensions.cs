@@ -15,17 +15,17 @@ using FluentValidation;
 using MiaCore.Features.Register;
 using MiaCore.Features.GenerictList;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace MiaCore.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddMiaAuthentication(this IServiceCollection services, Action<MiaCoreOptions> options)
+        public static IServiceCollection AddMiaAuthentication(this IServiceCollection services, IConfigurationSection configSection)
         {
-            var opt = new MiaCoreOptions();
-            options(opt);
+            var opt = configSection.Get<MiaCoreOptions>();
+            services.Configure<MiaCoreOptions>(configSection);
 
-            services.AddOptions<MiaCoreOptions>().Configure(options);
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IDashboardRepository, DashboardRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
