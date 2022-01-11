@@ -49,7 +49,12 @@ namespace MiaCore.Infrastructure.Persistence
                     _where += !_where.StartsWith("where") ? "where" : " and";
                     if (!long.TryParse(where.Value, out _))
                         where.Value = $"\"{where.Value}\"";
-                    _where += $" {_table}.{convertName(where.Key)} = {where.Value}";
+
+                    _where += where.Type switch
+                    {
+                        WhereConditionType.Like => " concat(" + string.Join(",", where.Keys.Select(x => $"{_table}.{convertName(x)}")) + $") regexp {where.Value}",
+                        _ => $" {_table}.{convertName(where.Key)} = {where.Value}"
+                    };
                 }
             return this;
         }
