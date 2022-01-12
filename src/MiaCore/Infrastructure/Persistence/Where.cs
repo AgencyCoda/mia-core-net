@@ -23,6 +23,6 @@ namespace MiaCore.Infrastructure.Persistence
     public enum WhereConditionType
     {
         Equal,
-        Like
+        Likes
     }
 }

@@ -52,7 +52,7 @@ namespace MiaCore.Infrastructure.Persistence
 
                     _where += where.Type switch
                     {
-                        WhereConditionType.Like => " concat(" + string.Join(",", where.Keys.Select(x => $"{_table}.{convertName(x)}")) + $") regexp {where.Value}",
+                        WhereConditionType.Likes => " concat(" + string.Join(",", where.Keys.Select(x => $"{_table}.{convertName(x)}")) + $") regexp {where.Value}",
                         _ => $" {_table}.{convertName(where.Key)} = {where.Value}"
                     };
                 }
