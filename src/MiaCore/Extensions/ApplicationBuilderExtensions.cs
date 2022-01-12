@@ -12,6 +12,7 @@ using MiaCore.Features.RecoveryPassword;
 using MiaCore.Features.Register;
 using MiaCore.Features.RemoveEntityById;
 using MiaCore.Features.SaveCategory;
+using MiaCore.Features.SaveNews;
 using MiaCore.Features.TransferList;
 using MiaCore.Features.UpdateProfile;
 using MiaCore.Models;
@@ -49,6 +50,7 @@ namespace MiaCore.Extensions
                 endpoints.MapGetRequest<CreateGetAccountRequest>("account/me");
                 endpoints.MapGetRequest<TransferListRequest>("transfer/list");
                 endpoints.MapDeleteRequest<RemoveEntityByIdRequest<MiaUser>>("mia-auth/user/remove/{id}", roles: Roles.Admin);
+                endpoints.MapPostRequest<SaveNewsRequest>("news/save");
             });
 
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;

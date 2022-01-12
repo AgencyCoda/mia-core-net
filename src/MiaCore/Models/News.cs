@@ -11,7 +11,7 @@ namespace MiaCore.Models
         public int Views { get; set; }
         public int Comments { get; set; }
         public int Likes { get; set; }
-        public long ParentId { get; set; }
+        public long? ParentId { get; set; }
         public string Address { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
@@ -19,6 +19,5 @@ namespace MiaCore.Models
         public int Status { get; set; }
         public bool Visibility { get; set; }
         public bool IsLive { get; set; }
-        public bool Deleted { get; set; }
     }
 }
