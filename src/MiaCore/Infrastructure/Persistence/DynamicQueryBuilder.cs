@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using MiaCore.Models;
 
 namespace MiaCore.Infrastructure.Persistence
 {
@@ -14,15 +16,19 @@ namespace MiaCore.Infrastructure.Persistence
         private bool _isCount;
 
 
-        public DynamicQueryBuilder(string tableName)
+        public DynamicQueryBuilder(Type entityType)
         {
-            _table = convertName(tableName);
+            _table = convertName(entityType.Name);
             _select = $"SELECT {_table}.*";
             _from = $"from {_table}";
             _where = "";
             _limit = "";
             _order = "";
             _isCount = false;
+
+            if (entityType.IsSubclassOf(typeof(BaseEntity)))
+                _where += " where deleted = 0 ";
+
         }
 
         public DynamicQueryBuilder WithOne(string tableName)

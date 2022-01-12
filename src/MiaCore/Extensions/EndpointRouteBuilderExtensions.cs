@@ -42,6 +42,18 @@ namespace MiaCore.Extensions
                 e.RequireAuthorization();
         }
 
+        internal static void MapDeleteRequest<T>(this IEndpointRouteBuilder endpoint, string pattern, bool allowAnonymous = false, List<int> roles = null) where T : IBaseRequest, new()
+        {
+            var action = generateAction<T>(parsePostRequest<T>, roles);
+            var e = endpoint.MapDelete(pattern, action);
+            if (allowAnonymous)
+                e.AllowAnonymous();
+            else
+            {
+                e.RequireAuthorization();
+            }
+        }
+
         private static RequestDelegate generateAction<T>(Func<HttpContext, JsonSerializerOptions, Task<T>> parseFunction, List<int> roles) where T : IBaseRequest, new()
         {
             RequestDelegate action = async (HttpContext context) =>

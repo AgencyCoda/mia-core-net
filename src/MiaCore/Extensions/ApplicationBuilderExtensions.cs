@@ -10,6 +10,7 @@ using MiaCore.Features.GetDashboardStats;
 using MiaCore.Features.Login;
 using MiaCore.Features.RecoveryPassword;
 using MiaCore.Features.Register;
+using MiaCore.Features.RemoveEntityById;
 using MiaCore.Features.SaveCategory;
 using MiaCore.Features.TransferList;
 using MiaCore.Features.UpdateProfile;
@@ -47,6 +48,7 @@ namespace MiaCore.Extensions
                 endpoints.MapGetRequest<GetDashboardStatsRequest>("dashboard/stats", roles: Roles.Admin);
                 endpoints.MapGetRequest<CreateGetAccountRequest>("account/me");
                 endpoints.MapGetRequest<TransferListRequest>("transfer/list");
+                endpoints.MapDeleteRequest<RemoveEntityByIdRequest<MiaUser>>("mia-auth/user/remove/{id}", roles: Roles.Admin);
             });
 
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;

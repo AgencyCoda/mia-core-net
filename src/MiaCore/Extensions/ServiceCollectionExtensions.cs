@@ -16,6 +16,7 @@ using MiaCore.Features.Register;
 using MiaCore.Features.GenerictList;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using MiaCore.Features.RemoveEntityById;
 
 namespace MiaCore.Extensions
 {
@@ -43,10 +44,17 @@ namespace MiaCore.Extensions
                 .Where(p => typeof(IEntity).IsAssignableFrom(p) && !p.IsInterface);
             foreach (var type in types)
             {
+                // Generic List
                 var requestType = typeof(GenerictListRequest<>).MakeGenericType(type);
                 var inter = typeof(IRequestHandler<,>).MakeGenericType(requestType, typeof(object));
                 var impl = typeof(GenerictListRequestHandler<>).MakeGenericType(type);
                 services.AddScoped(inter, impl);
+
+                //Generic Remove
+                var requestType1 = typeof(RemoveEntityByIdRequest<>).MakeGenericType(type);
+                var inter1 = typeof(IRequestHandler<,>).MakeGenericType(requestType1, typeof(object));
+                var impl1 = typeof(RemoveEntityByIdRequestHandler<>).MakeGenericType(type);
+                services.AddScoped(inter1, impl1);
             }
 
             services.AddMiaAuthentication_(opt.JwtSecret);

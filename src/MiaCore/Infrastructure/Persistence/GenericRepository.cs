@@ -25,6 +25,8 @@ namespace MiaCore.Infrastructure.Persistence
         {
             using var conn = GetConnection();
             var query = "select * from " + Tablename + " where id = @id";
+            if (typeof(T).IsSubclassOf(typeof(BaseEntity)))
+                query += " and deleted = 0";
             var result = await conn.QueryFirstOrDefaultAsync<T>(query, new { id });
             return result;
         }
@@ -32,7 +34,7 @@ namespace MiaCore.Infrastructure.Persistence
         public virtual async Task<T> GetByAsync(params Where[] filters)
         {
             using var conn = GetConnection();
-            var queryBuilder = new DynamicQueryBuilder(typeof(T).Name);
+            var queryBuilder = new DynamicQueryBuilder(typeof(T));
             var query = queryBuilder
                 .Where(filters.ToList())
                 .WithLimit(1, 1)
@@ -44,7 +46,7 @@ namespace MiaCore.Infrastructure.Persistence
         public virtual async Task<T> GetFirstByAsync(params Where[] filters)
         {
             using var conn = GetConnection();
-            var queryBuilder = new DynamicQueryBuilder(typeof(T).Name);
+            var queryBuilder = new DynamicQueryBuilder(typeof(T));
             var query = queryBuilder
                 .Where(filters.ToList())
                 .OrderBy(new List<Order> { new Order { Field = "id", Type = OrderType.Asc } })
@@ -57,7 +59,7 @@ namespace MiaCore.Infrastructure.Persistence
         public virtual async Task<T> GetLastByAsync(params Where[] filters)
         {
             using var conn = GetConnection();
-            var queryBuilder = new DynamicQueryBuilder(typeof(T).Name);
+            var queryBuilder = new DynamicQueryBuilder(typeof(T));
             var query = queryBuilder
                 .Where(filters.ToList())
                 .OrderBy(new List<Order> { new Order { Field = "id", Type = OrderType.Desc } })
@@ -71,6 +73,8 @@ namespace MiaCore.Infrastructure.Persistence
         {
             using var conn = GetConnection();
             var query = "select * from " + Tablename;
+            if (typeof(T).IsSubclassOf(typeof(BaseEntity)))
+                query += " where deleted = 0";
             return await conn.QueryAsync<T>(query);
         }
 
@@ -85,7 +89,7 @@ namespace MiaCore.Infrastructure.Persistence
 
             int i = 0;
 
-            var queryBuilder = new DynamicQueryBuilder(type.Name);
+            var queryBuilder = new DynamicQueryBuilder(type);
 
             if (relatedEntities != null)
                 foreach (var item in relatedEntities)
@@ -212,8 +216,14 @@ namespace MiaCore.Infrastructure.Persistence
         public virtual async Task<bool> DeleteAsync(object id)
         {
             using var conn = GetConnection();
-            var query = "delete from " + Tablename + " where id = @id";
-            var deleted = await conn.ExecuteAsync(query, id);
+            string query = "";
+            if (typeof(T).IsSubclassOf(typeof(BaseEntity)))
+                query = "update " + Tablename + " set deleted=1 where id = @id and deleted=0";
+            else
+                query = "delete from " + Tablename + " where id = @id";
+
+            var deleted = await conn.ExecuteAsync(query, new { Id = id });
+
             return deleted > 0;
         }
 
