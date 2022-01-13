@@ -21,14 +21,12 @@ namespace MiaCore.Infrastructure.Persistence
             Tablename = getTableName();
         }
 
-        public virtual async Task<T> GetAsync(object id)
+        public virtual async Task<T> GetAsync(object id, string[] relatedEntities = null)
         {
             using var conn = GetConnection();
-            var query = "select * from " + Tablename + " where id = @id";
-            if (typeof(T).IsSubclassOf(typeof(BaseEntity)))
-                query += " and deleted = 0";
-            var result = await conn.QueryFirstOrDefaultAsync<T>(query, new { id });
-            return result;
+            var where = new Where("id", id);
+            var list = await GetListAsync(wheres: new List<Where> { where }, relatedEntities: relatedEntities);
+            return list.Data.FirstOrDefault();
         }
 
         public virtual async Task<T> GetByAsync(params Where[] filters)
@@ -78,7 +76,7 @@ namespace MiaCore.Infrastructure.Persistence
             return await conn.QueryAsync<T>(query);
         }
 
-        public async Task<GenericListResponse<T>> GetListAsync(string[] relatedEntities, int? limit, int? page, List<Where> wheres, List<Order> orders)
+        public async Task<GenericListResponse<T>> GetListAsync(List<Where> wheres = null, List<Order> orders = null, int? limit = null, int? page = null, string[] relatedEntities = null)
         {
             using var conn = GetConnection();
 

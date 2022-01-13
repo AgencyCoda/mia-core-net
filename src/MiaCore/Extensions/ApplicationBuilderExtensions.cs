@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using MiaCore.Features.AssignCategoryToUser;
 using MiaCore.Features.CreateGetAccount;
 using MiaCore.Features.CreateUser;
 using MiaCore.Features.CurrentUserPlan;
+using MiaCore.Features.FetchEntityById;
 using MiaCore.Features.FetchProfile;
 using MiaCore.Features.Firebase;
 using MiaCore.Features.GenerictList;
@@ -53,6 +53,7 @@ namespace MiaCore.Extensions
                 endpoints.MapDeleteRequest<RemoveEntityByIdRequest<MiaUser>>("mia-auth/user/remove/{id}", roles: Roles.Admin);
                 endpoints.MapPostRequest<SaveNewsRequest>("news/save");
                 endpoints.MapPostRequest<SearchNewsByLocationRequest>("news/search-by-location");
+                endpoints.MapGetRequest<FetchEntityByIdRequest<MiaUser>>("mia-auth/user/fetch/{id}");
             });
 
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;

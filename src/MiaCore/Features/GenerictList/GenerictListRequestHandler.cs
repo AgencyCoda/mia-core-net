@@ -17,7 +17,7 @@ namespace MiaCore.Features.GenerictList
         }
         public virtual async Task<object> Handle(GenerictListRequest<T> request, CancellationToken cancellationToken)
         {
-            var res = await _repository.GetListAsync(request.With, request.Limit, request.Page, request.Wheres, request.Orders);
+            var res = await _repository.GetListAsync(request.Wheres, request.Orders, request.Limit, request.Page, request.With);
 
             return res;
         }

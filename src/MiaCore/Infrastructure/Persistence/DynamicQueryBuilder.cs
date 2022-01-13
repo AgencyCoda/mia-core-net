@@ -27,7 +27,7 @@ namespace MiaCore.Infrastructure.Persistence
             _isCount = false;
 
             if (entityType.IsSubclassOf(typeof(BaseEntity)))
-                _where += " where deleted = 0 ";
+                _where += "where deleted = 0 ";
 
         }
 
