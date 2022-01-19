@@ -3,6 +3,7 @@ using MiaCore.Features.CreateGetAccount;
 using MiaCore.Features.CreateUser;
 using MiaCore.Features.CurrentUserPlan;
 using MiaCore.Features.FetchEntityById;
+using MiaCore.Features.FetchMiaBillingInfo;
 using MiaCore.Features.FetchProfile;
 using MiaCore.Features.Firebase;
 using MiaCore.Features.GenerictList;
@@ -11,6 +12,7 @@ using MiaCore.Features.Login;
 using MiaCore.Features.RecoveryPassword;
 using MiaCore.Features.Register;
 using MiaCore.Features.RemoveEntityById;
+using MiaCore.Features.SaveBillingInfo;
 using MiaCore.Features.SaveCategory;
 using MiaCore.Features.SaveNews;
 using MiaCore.Features.SearchNewsByLocation;
@@ -54,6 +56,8 @@ namespace MiaCore.Extensions
                 endpoints.MapPostRequest<SaveNewsRequest>("news/save");
                 endpoints.MapPostRequest<SearchNewsByLocationRequest>("news/search-by-location");
                 endpoints.MapGetRequest<FetchEntityByIdRequest<MiaUser>>("mia-auth/user/fetch/{id}");
+                endpoints.MapPostRequest<SaveBillingInfoRequest>("mia-billing/info/save", roles: Roles.Admin);
+                endpoints.MapGetRequest<FetchMiaBillingInfoRequest>("mia-billing/info/fetch/{id}", roles: Roles.Admin);
             });
 
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
