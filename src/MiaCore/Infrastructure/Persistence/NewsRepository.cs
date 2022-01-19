@@ -27,7 +27,9 @@ namespace MiaCore.Infrastructure.Persistence
                                     )
                             )
                             AS distance
-                        FROM news
+                        FROM news n 
+                        left join news_category nc on n.id = nc.news_id
+                        where nc.category_id in (@categories)
                         HAVING distance < 10
                         ORDER BY distance";
             var res = await conn.QueryAsync<News>(query, new { latitude, longitude, categories = string.Join(",", categories) });
