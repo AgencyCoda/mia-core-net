@@ -4,6 +4,7 @@ using MiaCore.Features;
 using MiaCore.Features.CreateUser;
 using MiaCore.Features.Login;
 using MiaCore.Features.Register;
+using MiaCore.Features.SaveBillingInfo;
 using MiaCore.Features.SaveCategory;
 using MiaCore.Features.SaveNews;
 using MiaCore.Features.UpdateProfile;
@@ -24,6 +25,7 @@ namespace MiaCore.Mapper
             CreateMap<MiaCategory, CategoryDto>();
             CreateMap<SaveNewsRequest, News>()
                 .ForMember(x => x.Content, a => a.MapFrom(f => JsonSerializer.Serialize(f.Content, null)));
+            CreateMap<SaveBillingInfoRequest, MiaBillingInfo>();
         }
     }
 }
