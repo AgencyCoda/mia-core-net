@@ -16,7 +16,12 @@ namespace MiaCore.Infrastructure.Persistence
         public async Task<List<News>> SearchByLocationAsync(double latitude, double longitude, List<int> categories)
         {
             using var conn = GetConnection();
-            var query = @"SELECT
+            var where = "";
+            if (categories != null && categories.Any())
+            {
+                where = $"where nc.category_id in ({string.Join(",", categories)})";
+            }
+            var query = $@"SELECT
                             *,
                             ( 6371
                             * acos( cos( radians(@latitude) )
@@ -29,10 +34,10 @@ namespace MiaCore.Infrastructure.Persistence
                             AS distance
                         FROM news n 
                         left join news_category nc on n.id = nc.news_id
-                        where nc.category_id in (@categories)
+                        {where}
                         HAVING distance < 10
                         ORDER BY distance";
-            var res = await conn.QueryAsync<News>(query, new { latitude, longitude, categories = string.Join(",", categories) });
+            var res = await conn.QueryAsync<News>(query, new { latitude, longitude });
             return res.ToList();
         }
     }
