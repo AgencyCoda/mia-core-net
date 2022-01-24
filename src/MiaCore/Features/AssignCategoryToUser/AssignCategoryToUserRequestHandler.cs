@@ -10,7 +10,7 @@ using MiaCore.Utils;
 
 namespace MiaCore.Features.AssignCategoryToUser
 {
-    internal class AssignCategoryToUserRequestHandler : IRequestHandler<AssignCategoryToUserRequest, bool>
+    internal class AssignCategoryToUserRequestHandler : IRequestHandler<AssignCategoryToUserRequest, object>
     {
         private readonly IGenericRepository<MiaCategory> _categoryRepository;
         private readonly IGenericRepository<MiaUserCategory> _userCategoryRepository;
@@ -23,11 +23,11 @@ namespace MiaCore.Features.AssignCategoryToUser
             _userHelper = userHelper;
         }
 
-        public async Task<bool> Handle(AssignCategoryToUserRequest request, CancellationToken cancellationToken)
+        public async Task<object> Handle(AssignCategoryToUserRequest request, CancellationToken cancellationToken)
         {
             var userId = _userHelper.GetUserId();
             if (await _categoryRepository.GetAsync(request.CategoryId) is null)
-                return false;
+                throw new BadRequestException(ErrorMessages.CategoryNotFound);
 
             var existing = await _userCategoryRepository.GetByAsync(
                 new Where(nameof(MiaUserCategory.UserId), userId),
@@ -35,7 +35,7 @@ namespace MiaCore.Features.AssignCategoryToUser
                 );
 
             if (existing != null)
-                return true;
+                return new { Success = true };
 
             var userCategory = new MiaUserCategory
             {
@@ -45,7 +45,7 @@ namespace MiaCore.Features.AssignCategoryToUser
 
             await _userCategoryRepository.InsertAsync(userCategory);
 
-            return true;
+            return new { Success = true };
         }
     }
 }
