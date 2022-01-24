@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using MiaCore.Exceptions;
 using MiaCore.Infrastructure.Persistence;
 using MiaCore.Models;
 using MiaCore.Utils;
@@ -23,13 +24,31 @@ namespace MiaCore.Features.SaveBillingInfo
 
         public async Task<MiaBillingInfo> Handle(SaveBillingInfoRequest request, CancellationToken cancellationToken)
         {
-            var billingInfo = _mapper.Map<MiaBillingInfo>(request);
-            billingInfo.UserId = _userHelper.GetUserId();
+            MiaBillingInfo billingInfo;
 
             if (!request.Id.HasValue)
-                billingInfo.Id = await _repo.InsertAsync(billingInfo);
+            {
+                var userId = _userHelper.GetUserId();
+                bool exists = false;
+                billingInfo = await _repo.GetByAsync(new Where(nameof(MiaBillingInfo.UserId), userId));
+                if (billingInfo != null)
+                {
+                    exists = true;
+                    request.Id = billingInfo.Id;
+                }
+                billingInfo = _mapper.Map<SaveBillingInfoRequest, MiaBillingInfo>(request, billingInfo);
+                billingInfo.UserId = userId;
+                if (!exists)
+                    billingInfo.Id = await _repo.InsertAsync(billingInfo);
+                else
+                    await _repo.UpdateAsync(billingInfo);
+            }
             else
+            {
+                billingInfo = await _repo.GetAsync(request.Id);
+                billingInfo = _mapper.Map<SaveBillingInfoRequest, MiaBillingInfo>(request, billingInfo);
                 await _repo.UpdateAsync(billingInfo);
+            }
 
             return billingInfo;
         }
