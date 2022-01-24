@@ -92,9 +92,9 @@ namespace MiaCore.Infrastructure.Persistence
             if (relatedEntities != null)
                 foreach (var item in relatedEntities)
                 {
-                    var propType = type.GetProperty(item)?.PropertyType;
+                    var propType = type.GetProperty(item, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance)?.PropertyType;
                     if (propType is null)
-                        throw new Exception($"Error.Field: {item} not found");
+                        throw new Exception($"Error. Field:{item} not found");
 
                     var propertyIsList = false;
                     if (typeof(IEnumerable).IsAssignableFrom(propType))
@@ -140,7 +140,7 @@ namespace MiaCore.Infrastructure.Persistence
                 if (relatedEntities != null)
                     for (int i = 0; i < relatedEntities.Length; i++)
                     {
-                        var prop = obj[0].GetType().GetProperty(relatedEntities[0]);
+                        var prop = obj[0].GetType().GetProperty(relatedEntities[0], BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                         if (typeof(IEnumerable).IsAssignableFrom(prop.PropertyType))
                         {
                             var res = prop.GetValue(obj[0]) as IList;
@@ -239,7 +239,7 @@ namespace MiaCore.Infrastructure.Persistence
         {
             if (Columns is null)
             {
-                var properties = typeof(T).GetProperties().ToList();
+                var properties = typeof(T).GetProperties().Where(x => !x.IsDefined(typeof(RelationAttribute))).ToList();
                 Columns = properties.Select(x => x.Name).ToList();
             }
 

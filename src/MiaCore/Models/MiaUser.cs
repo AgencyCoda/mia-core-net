@@ -17,5 +17,7 @@ namespace MiaCore.Models
         public int Status { get; set; }
         public bool IsNotification { get; set; }
         public string Caption { get; set; }
+        [Relation]
+        public List<MiaUserCategory> Categories { get; set; }
     }
 }

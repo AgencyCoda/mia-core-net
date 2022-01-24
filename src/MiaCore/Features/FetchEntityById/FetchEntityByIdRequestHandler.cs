@@ -20,7 +20,7 @@ namespace MiaCore.Features.FetchEntityById
 
         public async Task<T> Handle(FetchEntityByIdRequest<T> request, CancellationToken cancellationToken)
         {
-            return await _repo.GetAsync(request.Id, request.With);
+            return await _repo.GetAsync(request.Id, request.Withs?.Split(','));
         }
     }
 }
