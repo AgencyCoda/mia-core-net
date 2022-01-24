@@ -4,7 +4,7 @@ using MiaCore.Models;
 
 namespace MiaCore.Infrastructure.Persistence
 {
-    public class GenericListResponse<T> where T : IEntity
+    public class GenericListResponse<T>
     {
         public long CurrentPage { get; set; }
         public long LastPage => PerPage == 0 ? 0 : (long)Math.Ceiling((double)Total / PerPage);

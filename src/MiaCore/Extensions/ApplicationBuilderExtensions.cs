@@ -9,6 +9,7 @@ using MiaCore.Features.Firebase;
 using MiaCore.Features.GenerictList;
 using MiaCore.Features.GetDashboardStats;
 using MiaCore.Features.Login;
+using MiaCore.Features.NewsList;
 using MiaCore.Features.RecoveryPassword;
 using MiaCore.Features.Register;
 using MiaCore.Features.RemoveEntityById;
@@ -44,7 +45,7 @@ namespace MiaCore.Extensions
                 endpoints.MapPostRequest<GenerictListRequest<MiaUser>>("mia-auth/user/list", roles: Roles.Admin);
                 endpoints.MapPostRequest<GenerictListRequest<MiaCurrency>>("mia-currency/list", true);
                 endpoints.MapPostRequest<GenerictListRequest<MiaCategory>>("mia-category/list", true);
-                endpoints.MapPostRequest<GenerictListRequest<News>>("news/list", true);
+                endpoints.MapPostRequest<NewsListRequest>("news/list", true);
                 endpoints.MapPostRequest<SaveCategoryRequest>("mia-category/save", roles: Roles.Admin);
                 endpoints.MapPostRequest<AssignCategoryToUserRequest>("mia-category/assign-to-user");
                 endpoints.MapPostRequest<GenerictListRequest<MiaUserPlan>>("mia-auth/user/plan/list", roles: Roles.Admin);
