@@ -49,7 +49,7 @@ namespace MiaCore.Extensions
                 endpoints.MapPostRequest<SaveCategoryRequest>("mia-category/save", roles: Roles.Admin);
                 endpoints.MapPostRequest<AssignCategoryToUserRequest>("mia-category/assign-to-user");
                 endpoints.MapPostRequest<GenerictListRequest<MiaUserPlan>>("mia-auth/user/plan/list", roles: Roles.Admin);
-                endpoints.MapPostRequest<CurrentUserPlanRequest>("mia-auth/user/plan/current/{id}", roles: Roles.Admin);
+                endpoints.MapGetRequest<CurrentUserPlanRequest>("mia-auth/user/plan/current/{id}", roles: Roles.Admin);
                 endpoints.MapGetRequest<GetDashboardStatsRequest>("dashboard/stats", roles: Roles.Admin);
                 endpoints.MapGetRequest<CreateGetAccountRequest>("account/me");
                 endpoints.MapGetRequest<TransferListRequest>("transfer/list");
