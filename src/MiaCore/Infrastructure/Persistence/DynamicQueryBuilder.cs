@@ -27,7 +27,7 @@ namespace MiaCore.Infrastructure.Persistence
             _isCount = false;
 
             if (entityType.IsSubclassOf(typeof(BaseEntity)))
-                _where += "where deleted = 0 ";
+                _where += $"where {_table}.deleted = 0 ";
 
         }
 
@@ -71,7 +71,7 @@ namespace MiaCore.Infrastructure.Persistence
                 foreach (var order in orders)
                 {
                     _order += !_order.StartsWith("order by") ? "order by" : " ,";
-                    _order += $" {order.Field} {order.Type}";
+                    _order += $" {_table}.{order.Field} {order.Type}";
                 }
             return this;
         }

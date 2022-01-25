@@ -7,6 +7,8 @@ namespace MiaCore.Models
         public long Id { get; set; }
         public long UserId { get; set; }
         public int PlanId { get; set; }
+        [Relation]
+        public MiaPlan Plan { get; set; }
         public int Frequency { get; set; }
         public decimal Amount { get; set; }
         public DateTime Start { get; set; }

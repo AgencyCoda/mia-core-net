@@ -19,7 +19,7 @@ namespace MiaCore.Features.CurrentUserPlan
 
         public async Task<MiaUserPlan> Handle(CurrentUserPlanRequest request, CancellationToken cancellationToken)
         {
-            var userPlan = await _planRepository.GetLastByAsync(
+            var userPlan = await _planRepository.GetLastByAsync(request.Withs?.Split(","),
                     new Where(nameof(MiaUserPlan.UserId), request.Id),
                     new Where(nameof(MiaUserPlan.Status), 1)
                     );

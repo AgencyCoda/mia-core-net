@@ -31,40 +31,44 @@ namespace MiaCore.Infrastructure.Persistence
 
         public virtual async Task<T> GetByAsync(params Where[] filters)
         {
-            using var conn = GetConnection();
-            var queryBuilder = new DynamicQueryBuilder(typeof(T));
-            var query = queryBuilder
-                .Where(filters.ToList())
-                .WithLimit(1, 1)
-                .Build();
+            return await GetByAsync(null, filters);
+        }
 
-            return await conn.QueryFirstOrDefaultAsync<T>(query);
+        public virtual async Task<T> GetByAsync(string[] relatedEntities = null, params Where[] filters)
+        {
+            using var conn = GetConnection();
+            var list = await GetListAsync(wheres: filters.ToList(), relatedEntities: relatedEntities, limit: 1, page: 1);
+            return list.Data.FirstOrDefault();
         }
 
         public virtual async Task<T> GetFirstByAsync(params Where[] filters)
         {
-            using var conn = GetConnection();
-            var queryBuilder = new DynamicQueryBuilder(typeof(T));
-            var query = queryBuilder
-                .Where(filters.ToList())
-                .OrderBy(new List<Order> { new Order { Field = "id", Type = OrderType.Asc } })
-                .WithLimit(1, 1)
-                .Build();
+            return await GetFirstByAsync(null, filters);
+        }
 
-            return await conn.QueryFirstOrDefaultAsync<T>(query);
+        public virtual async Task<T> GetFirstByAsync(string[] relatedEntities = null, params Where[] filters)
+        {
+            using var conn = GetConnection();
+
+            var orders = new List<Order> { new Order { Field = "id", Type = OrderType.Asc } };
+
+            var list = await GetListAsync(wheres: filters.ToList(), relatedEntities: relatedEntities, limit: 1, page: 1, orders: orders);
+            return list.Data.FirstOrDefault();
         }
 
         public virtual async Task<T> GetLastByAsync(params Where[] filters)
         {
-            using var conn = GetConnection();
-            var queryBuilder = new DynamicQueryBuilder(typeof(T));
-            var query = queryBuilder
-                .Where(filters.ToList())
-                .OrderBy(new List<Order> { new Order { Field = "id", Type = OrderType.Desc } })
-                .WithLimit(1, 1)
-                .Build();
+            return await GetLastByAsync(null, filters);
+        }
 
-            return await conn.QueryFirstOrDefaultAsync<T>(query);
+        public virtual async Task<T> GetLastByAsync(string[] relatedEntities = null, params Where[] filters)
+        {
+            using var conn = GetConnection();
+
+            var orders = new List<Order> { new Order { Field = "id", Type = OrderType.Desc } };
+
+            var list = await GetListAsync(wheres: filters.ToList(), relatedEntities: relatedEntities, limit: 1, page: 1, orders: orders);
+            return list.Data.FirstOrDefault();
         }
 
         public virtual async Task<IEnumerable<T>> GetAllAsync()

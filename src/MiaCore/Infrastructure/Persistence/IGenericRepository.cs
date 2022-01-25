@@ -7,6 +7,9 @@ namespace MiaCore.Infrastructure.Persistence
     public interface IGenericRepository<T> where T : IEntity
     {
         Task<T> GetAsync(object id, string[] relatedEntities = null);
+        Task<T> GetByAsync(string[] relatedEntities = null, params Where[] filters);
+        Task<T> GetFirstByAsync(string[] relatedEntities = null, params Where[] filters);
+        Task<T> GetLastByAsync(string[] relatedEntities = null, params Where[] filters);
         Task<T> GetByAsync(params Where[] filters);
         Task<T> GetFirstByAsync(params Where[] filters);
         Task<T> GetLastByAsync(params Where[] filters);
