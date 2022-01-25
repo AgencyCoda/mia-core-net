@@ -1,6 +1,6 @@
 namespace MiaCore.Models
 {
-    public class News : BaseEntity, IEntity
+    public class News : BaseEntity, IEntity,IDeletableEntity
     {
         public long Id { get; set; }
         public long UserId { get; set; }

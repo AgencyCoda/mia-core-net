@@ -1,6 +1,6 @@
 namespace MiaCore.Models
 {
-    public class Transfer : BaseEntity
+    public class Transfer : BaseEntity, IDeletableEntity
     {
         public long Id { get; set; }
         public long AccountId { get; set; }

@@ -1,6 +1,6 @@
 namespace MiaCore.Models
 {
-    public class MiaBillingInfo : BaseEntity
+    public class MiaBillingInfo : BaseEntity,IDeletableEntity
     {
         public long Id { get; set; }
         public long UserId { get; set; }

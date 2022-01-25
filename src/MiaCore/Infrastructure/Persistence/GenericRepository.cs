@@ -71,7 +71,7 @@ namespace MiaCore.Infrastructure.Persistence
         {
             using var conn = GetConnection();
             var query = "select * from " + Tablename;
-            if (typeof(T).IsSubclassOf(typeof(BaseEntity)))
+            if (typeof(T).IsAssignableFrom(typeof(IDeletableEntity)))
                 query += " where deleted = 0";
             return await conn.QueryAsync<T>(query);
         }
@@ -215,7 +215,7 @@ namespace MiaCore.Infrastructure.Persistence
         {
             using var conn = GetConnection();
             string query = "";
-            if (typeof(T).IsSubclassOf(typeof(BaseEntity)))
+            if (typeof(T).IsAssignableFrom(typeof(IDeletableEntity)))
                 query = "update " + Tablename + " set deleted=1 where id = @id and deleted=0";
             else
                 query = "delete from " + Tablename + " where id = @id";
