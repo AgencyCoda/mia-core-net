@@ -37,9 +37,9 @@ namespace MiaCore.Extensions
                 endpoints.MapGetRequest<FetchProfileRequest>("mia-auth/me");
                 endpoints.MapPostRequest<SaveUserRequest>("mia-auth/user/save", roles: Roles.Admin);
                 endpoints.MapPostRequest<UpdateProfileRequest>("mia-auth/update-profile");
-                endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-firebase");
-                endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-google");
-                endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-facebook");
+                endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-firebase", true);
+                endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-google", true);
+                endpoints.MapPostRequest<FirebaseAuthenticationRequest>("mia-auth/login-with-facebook", true);
                 endpoints.MapPostRequest<RecoveryPasswordRequest>("mia-auth/recovery");
                 endpoints.MapPostRequest<ChangePasswordRecoveryRequest>("mia-auth/change-password-recovery");
                 endpoints.MapPostRequest<GenerictListRequest<MiaUser>>("mia-auth/user/list", roles: Roles.Admin);
@@ -52,7 +52,7 @@ namespace MiaCore.Extensions
                 endpoints.MapGetRequest<CurrentUserPlanRequest>("mia-auth/user/plan/current/{id}", roles: Roles.Admin);
                 endpoints.MapGetRequest<GetDashboardStatsRequest>("dashboard/stats", roles: Roles.Admin);
                 endpoints.MapGetRequest<CreateGetAccountRequest>("account/me");
-                endpoints.MapGetRequest<TransferListRequest>("transfer/list");
+                endpoints.MapPostRequest<TransferListRequest>("transfer/list");
                 endpoints.MapDeleteRequest<RemoveEntityByIdRequest<MiaUser>>("mia-auth/user/remove/{id}", roles: Roles.Admin);
                 endpoints.MapPostRequest<SaveNewsRequest>("news/save");
                 endpoints.MapPostRequest<SearchNewsByLocationRequest>("news/search-by-location");
