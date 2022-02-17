@@ -16,7 +16,7 @@ namespace MiaCore.JWT
         /// <param name="services"></param>
         /// <param name="secret">Secret</param>
         /// <returns>IServiceCollection</returns>
-        public static IServiceCollection AddMiaAuthentication_(this IServiceCollection services, string secret)
+        public static IServiceCollection AddMiaAuthentication(this IServiceCollection services, string secret)
         {
             if (secret is null)
                 throw new ArgumentNullException(nameof(secret));

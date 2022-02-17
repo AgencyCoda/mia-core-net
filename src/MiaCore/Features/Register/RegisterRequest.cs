@@ -2,7 +2,7 @@ using MediatR;
 
 namespace MiaCore.Features.Register
 {
-    internal class RegisterRequest : IRequest<MiaUserDto>
+    public class RegisterRequest : IRequest<MiaUserDto>
     {
         public string Email { get; set; }
         public string Password { get; set; }

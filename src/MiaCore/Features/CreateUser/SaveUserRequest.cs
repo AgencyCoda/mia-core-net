@@ -2,7 +2,7 @@ using MediatR;
 
 namespace MiaCore.Features.CreateUser
 {
-    internal class SaveUserRequest : IRequest<MiaUserDto>
+    public class SaveUserRequest : IRequest<MiaUserDto>
     {
         public long? Id { get; set; }
         public string Firstname { get; set; }

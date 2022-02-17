@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace MiaCore.Utils
 {
-    internal class UserHelper
+    public class UserHelper
     {
         private readonly HttpContext _context;
         private readonly IUserRepository _userRepository;

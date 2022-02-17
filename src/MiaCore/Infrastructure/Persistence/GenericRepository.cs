@@ -12,7 +12,7 @@ using MySql.Data.MySqlClient;
 
 namespace MiaCore.Infrastructure.Persistence
 {
-    internal class GenericRepository<T> : BaseRepository, IGenericRepository<T> where T : IEntity
+    public class GenericRepository<T> : BaseRepository, IGenericRepository<T> where T : IEntity
     {
         protected List<string> Columns;
         protected string Tablename;

@@ -4,11 +4,9 @@ using AutoMapper;
 using MiaCore.Features;
 using MiaCore.Features.CreateUser;
 using MiaCore.Features.Login;
-using MiaCore.Features.NewsList;
 using MiaCore.Features.Register;
 using MiaCore.Features.SaveBillingInfo;
 using MiaCore.Features.SaveCategory;
-using MiaCore.Features.SaveNews;
 using MiaCore.Features.UpdateProfile;
 using MiaCore.Infrastructure.Persistence;
 using MiaCore.Models;
@@ -33,12 +31,12 @@ namespace MiaCore.Mapper
             CreateMap<MiaUser, MiaUserDto>();
             CreateMap<SaveCategoryRequest, MiaCategory>();
             CreateMap<MiaCategory, CategoryDto>();
-            CreateMap<SaveNewsRequest, News>()
-                .ForMember(x => x.Content, a => a.MapFrom(f => JsonSerializer.Serialize(f.Content, options)));
+            // CreateMap<SaveNewsRequest, News>()
+            //     .ForMember(x => x.Content, a => a.MapFrom(f => JsonSerializer.Serialize(f.Content, options)));
             CreateMap<SaveBillingInfoRequest, MiaBillingInfo>();
             CreateMap(typeof(GenericListResponse<>), typeof(GenericListResponse<>));
-            CreateMap<News, NewsDto>()
-                .ForMember(x => x.Content, a => a.MapFrom(f => JsonSerializer.Deserialize<object>(f.Content, options)));
+            // CreateMap<News, NewsDto>()
+            //     .ForMember(x => x.Content, a => a.MapFrom(f => JsonSerializer.Deserialize<object>(f.Content, options)));
         }
     }
 }

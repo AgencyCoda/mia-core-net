@@ -30,7 +30,7 @@ namespace MiaCore.Features.Login
 
             var response = _mapper.Map<LoginResponseDto>(user);
             response.TokenType = "bearer";
-            response.AccessToken = JWT.JwtHelper.GenerateToken(_options.JwtSecret, _options.TokenExpirationMinutes, user.Id.ToString());
+            response.AccessToken = JWT.JwtHelper.GenerateToken(_options.JwtSecret, _options.TokenExpirationMinutes, user.Id.ToString(), user.Role);
 
             return response;
         }

@@ -2,7 +2,7 @@ using MediatR;
 
 namespace MiaCore.Features.UpdateProfile
 {
-    internal class UpdateProfileRequest : IRequest<MiaUserDto>
+    public class UpdateProfileRequest : IRequest<MiaUserDto>
     {
         public string Firstname { get; set; }
         public string Lastname { get; set; }

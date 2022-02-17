@@ -23,14 +23,12 @@ namespace MiaCore.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddMiaAuthentication(this IServiceCollection services, IConfigurationSection configSection)
+        public static IServiceCollection AddMiaCore(this IServiceCollection services, IConfigurationSection configSection)
         {
             var opt = configSection.Get<MiaCoreOptions>();
             services.Configure<MiaCoreOptions>(configSection);
 
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IDashboardRepository, DashboardRepository>();
-            services.AddScoped<INewsRepository, NewsRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddSendGrid(options =>
                 {
@@ -65,7 +63,7 @@ namespace MiaCore.Extensions
                 services.AddScoped(inter2, impl2);
             }
 
-            services.AddMiaAuthentication_(opt.JwtSecret);
+            services.AddMiaAuthentication(opt.JwtSecret);
             services.AddHttpContextAccessor();
             services.AddScoped<UserHelper>();
             services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>(includeInternalTypes: true);

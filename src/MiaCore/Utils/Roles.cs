@@ -4,6 +4,6 @@ namespace MiaCore.Utils
 {
     public static class Roles
     {
-        public static List<int> Admin => new List<int> { 1 };
+        public static string Admin => "admin";
     }
 }

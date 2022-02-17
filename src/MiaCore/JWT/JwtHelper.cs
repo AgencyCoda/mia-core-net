@@ -38,7 +38,7 @@ namespace MiaCore.JWT
             }
         }
 
-        public static string GenerateToken(string secret, int expirationMinutes, string subject)
+        public static string GenerateToken(string secret, int expirationMinutes, string subject, int role)
         {
             var keyBytes = Encoding.ASCII.GetBytes(secret);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -48,6 +48,7 @@ namespace MiaCore.JWT
                 {
                     new Claim(ClaimTypes.Name, subject),
                     new Claim("UserId", subject),
+                    new Claim(ClaimTypes.Role, role ==1 ? "admin":"user"),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(expirationMinutes),
