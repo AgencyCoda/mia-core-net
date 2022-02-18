@@ -78,7 +78,7 @@ namespace MiaCore.Controllers
 
         [HttpGet("user/plan/current/{id}")]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> UserPlanCurrent(int id, [FromBody] CurrentUserPlanRequest request)
+        public async Task<IActionResult> UserPlanCurrent(int id, [FromQuery] CurrentUserPlanRequest request)
         {
             request.Id = id;
             return Ok(await Mediator.Send(request));
@@ -86,14 +86,13 @@ namespace MiaCore.Controllers
 
         [HttpPost("user/remove/{id}")]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> RemoveUser(long id, [FromBody] RemoveEntityByIdRequest<MiaUser> request)
+        public async Task<IActionResult> RemoveUser(long id)
         {
-            request.Id = id;
-            return Ok(await Mediator.Send(request));
+            return Ok(await Mediator.Send(new RemoveEntityByIdRequest<MiaUser> { Id = id }));
         }
 
         [HttpGet("user/fetch/{id}")]
-        public async Task<IActionResult> FetchUser(long id, [FromBody] FetchEntityByIdRequest<MiaUser> request)
+        public async Task<IActionResult> FetchUser(long id, [FromQuery] FetchEntityByIdRequest<MiaUser> request)
         {
             request.Id = id;
             return Ok(await Mediator.Send(request));

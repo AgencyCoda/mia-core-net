@@ -17,10 +17,9 @@ namespace MiaCore.Controllers
 
         [HttpGet("info/fetch/{id}")]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Fetch(long id, [FromBody] FetchMiaBillingInfoRequest request)
+        public async Task<IActionResult> Fetch(long id)
         {
-            request.Id = id;
-            return Ok(await Mediator.Send(request));
+            return Ok(await Mediator.Send(new FetchMiaBillingInfoRequest { Id = id }));
         }
     }
 }
