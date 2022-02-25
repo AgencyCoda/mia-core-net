@@ -31,8 +31,8 @@ namespace MiaCore.Controllers
         => Ok(await Mediator.Send(request));
 
         [HttpGet("me")]
-        public async Task<IActionResult> Me(FetchProfileRequest request)
-        => Ok(await Mediator.Send(request));
+        public async Task<IActionResult> Me()
+        => Ok(await Mediator.Send(new FetchProfileRequest()));
 
         [HttpPost("user/save")]
         [Authorize(Roles = "admin")]
