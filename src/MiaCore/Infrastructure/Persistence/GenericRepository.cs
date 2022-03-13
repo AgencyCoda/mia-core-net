@@ -96,7 +96,7 @@ namespace MiaCore.Infrastructure.Persistence
             if (relatedEntities != null)
                 foreach (var item in relatedEntities)
                 {
-                    var propType = type.GetProperty(item, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance)?.PropertyType;
+                    var propType = type.GetProperty(removeUndescores(item), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance)?.PropertyType;
                     if (propType is null)
                         throw new Exception($"Error. Field:{item} not found");
 
@@ -136,33 +136,32 @@ namespace MiaCore.Infrastructure.Persistence
             {
                 string id = obj[0].GetType().GetProperty("Id").GetValue(obj[0]).ToString();
                 object currObj;
-                if (dic.TryGetValue(id, out currObj))
-                    obj[0] = currObj;
-                else
-                    dic.Add(id, obj[0]);
+                if (!dic.TryGetValue(id, out currObj))
+                    dic.Add(id, currObj = obj[0]);
 
                 if (relatedEntities != null)
                     for (int i = 0; i < relatedEntities.Length; i++)
                     {
-                        var prop = obj[0].GetType().GetProperty(relatedEntities[0], BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                        var prop = currObj.GetType().GetProperty(removeUndescores(relatedEntities[0]), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                         if (typeof(IEnumerable).IsAssignableFrom(prop.PropertyType))
                         {
-                            var res = prop.GetValue(obj[0]) as IList;
+                            var res = prop.GetValue(currObj) as IList;
                             if (res is null)
                             {
                                 Type t = typeof(List<>).MakeGenericType(prop.PropertyType.GenericTypeArguments[0]);
                                 res = (IList)Activator.CreateInstance(t);
-                                prop.SetValue(obj[0], res);
+                                prop.SetValue(currObj, res);
                             }
                             res.Add(obj[i + 1]);
                         }
                         else
-                            prop.SetValue(obj[0], obj[i + 1]);
+                            prop.SetValue(currObj, obj[i + 1]);
                     }
-                return (T)obj[0];
+                return (T)currObj;
             }
             // , splitOn: relatedEntities.Length > 0 ? splitColumns : null
             );
+            list = list.Distinct();
             var result = new GenericListResponse<T>
             {
                 Total = count,
@@ -238,6 +237,9 @@ namespace MiaCore.Infrastructure.Persistence
 
         private string convertWithUnderscores(string name)
         => string.Concat(name.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString()));
+
+        private string removeUndescores(string name)
+        => name.Replace("_", "");
 
         private List<string> getColumns()
         {

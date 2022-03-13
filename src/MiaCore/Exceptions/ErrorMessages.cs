@@ -15,5 +15,6 @@ namespace MiaCore.Exceptions
         public static KeyValuePair<int, string> TokenNotValid { get; } = new KeyValuePair<int, string>(-10, "Token is not valid");
         public static KeyValuePair<int, string> UserAccountNotFound { get; } = new KeyValuePair<int, string>(-11, "User Account not found");
         public static KeyValuePair<int, string> CategoryNotFound { get; } = new KeyValuePair<int, string>(-12, "Category not found");
+        public static KeyValuePair<int, string> RequeustChangeFound { get; } = new KeyValuePair<int, string>(-13, "RequestChange not found");
     }
 }

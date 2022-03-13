@@ -19,5 +19,8 @@ namespace MiaCore.Models
         public string Caption { get; set; }
         [Relation]
         public List<MiaUserCategory> Categories { get; set; }
+
+        [Relation]
+        public List<RequestChange> RequestChanges { get; set; }
     }
 }
