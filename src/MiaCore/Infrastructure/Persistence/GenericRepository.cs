@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Dapper;
 using MiaCore.Models;
 using Microsoft.Extensions.Options;
-using MySql.Data.MySqlClient;
 
 namespace MiaCore.Infrastructure.Persistence
 {
@@ -21,9 +20,13 @@ namespace MiaCore.Infrastructure.Persistence
             Tablename = getTableName();
         }
 
+        public GenericRepository(DbConnection connection, IOptions<MiaCoreOptions> options) : base(connection, options)
+        {
+            Tablename = getTableName();
+        }
+
         public virtual async Task<T> GetAsync(object id, string[] relatedEntities = null)
         {
-            using var conn = GetConnection();
             var where = new Where("id", id);
             var list = await GetListAsync(wheres: new List<Where> { where }, relatedEntities: relatedEntities);
             return list.Data.FirstOrDefault();
@@ -36,7 +39,6 @@ namespace MiaCore.Infrastructure.Persistence
 
         public virtual async Task<T> GetByAsync(string[] relatedEntities = null, params Where[] filters)
         {
-            using var conn = GetConnection();
             var list = await GetListAsync(wheres: filters.ToList(), relatedEntities: relatedEntities, limit: 1, page: 1);
             return list.Data.FirstOrDefault();
         }
@@ -48,8 +50,6 @@ namespace MiaCore.Infrastructure.Persistence
 
         public virtual async Task<T> GetFirstByAsync(string[] relatedEntities = null, params Where[] filters)
         {
-            using var conn = GetConnection();
-
             var orders = new List<Order> { new Order { Field = "id", Type = OrderType.Asc } };
 
             var list = await GetListAsync(wheres: filters.ToList(), relatedEntities: relatedEntities, limit: 1, page: 1, orders: orders);
@@ -63,8 +63,6 @@ namespace MiaCore.Infrastructure.Persistence
 
         public virtual async Task<T> GetLastByAsync(string[] relatedEntities = null, params Where[] filters)
         {
-            using var conn = GetConnection();
-
             var orders = new List<Order> { new Order { Field = "id", Type = OrderType.Desc } };
 
             var list = await GetListAsync(wheres: filters.ToList(), relatedEntities: relatedEntities, limit: 1, page: 1, orders: orders);
@@ -73,17 +71,14 @@ namespace MiaCore.Infrastructure.Persistence
 
         public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
-            using var conn = GetConnection();
             var query = "select * from " + Tablename;
             if (typeof(T).IsAssignableFrom(typeof(IDeletableEntity)))
                 query += " where deleted = 0";
-            return await conn.QueryAsync<T>(query);
+            return await Connection.QueryAsync<T>(query);
         }
 
         public async Task<GenericListResponse<T>> GetListAsync(List<Where> wheres = null, List<Order> orders = null, int? limit = null, int? page = null, string[] relatedEntities = null)
         {
-            using var conn = GetConnection();
-
             var type = typeof(T);
 
             var types = new Type[(relatedEntities?.Length ?? 0) + 1];
@@ -130,9 +125,9 @@ namespace MiaCore.Infrastructure.Persistence
 
 
             var dic = new Dictionary<string, object>();
-            var count = await conn.ExecuteScalarAsync<long>(countQuery);
+            var count = await Connection.ExecuteScalarAsync<long>(countQuery);
 
-            var list = await conn.QueryAsync(query, types, obj =>
+            var list = await Connection.QueryAsync(query, types, obj =>
             {
                 string id = obj[0].GetType().GetProperty("Id").GetValue(obj[0]).ToString();
                 object currObj;
@@ -175,8 +170,6 @@ namespace MiaCore.Infrastructure.Persistence
 
         public virtual async Task<int> InsertAsync(T obj)
         {
-            using var conn = GetConnection();
-
             if (obj is BaseEntity entity)
                 entity.CreatedAt = DateTime.Now;
 
@@ -187,7 +180,7 @@ namespace MiaCore.Infrastructure.Persistence
             var cmd = @$"insert into {Tablename} ({columnsToInsert}) values({columnvalues});
                         SELECT LAST_INSERT_ID()";
 
-            var res = await conn.QuerySingleAsync<int>(cmd, obj);
+            var res = await Connection.QuerySingleAsync<int>(cmd, obj);
             return res;
         }
 
@@ -200,8 +193,6 @@ namespace MiaCore.Infrastructure.Persistence
             if (obj is BaseEntity entity)
                 entity.UpdatedAt = DateTime.Now;
 
-            using var conn = GetConnection();
-
             var columns = getColumns();
             var columnsToUpdate = String.Join(',',
                     columns.Where(x => !x.Equals("Id", StringComparison.OrdinalIgnoreCase) && !x.Equals("CreatedAt", StringComparison.OrdinalIgnoreCase))
@@ -209,21 +200,20 @@ namespace MiaCore.Infrastructure.Persistence
 
             var cmd = $"update {Tablename} set {columnsToUpdate} where id = @id";
 
-            var updated = await conn.ExecuteAsync(cmd, obj);
+            var updated = await Connection.ExecuteAsync(cmd, obj);
 
             return updated > 0;
         }
 
         public virtual async Task<bool> DeleteAsync(object id)
         {
-            using var conn = GetConnection();
             string query = "";
             if (typeof(T).IsAssignableFrom(typeof(IDeletableEntity)))
                 query = "update " + Tablename + " set deleted=1 where id = @id and deleted=0";
             else
                 query = "delete from " + Tablename + " where id = @id";
 
-            var deleted = await conn.ExecuteAsync(query, new { Id = id });
+            var deleted = await Connection.ExecuteAsync(query, new { Id = id });
 
             return deleted > 0;
         }

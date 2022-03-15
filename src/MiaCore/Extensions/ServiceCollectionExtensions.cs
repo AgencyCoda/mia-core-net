@@ -39,6 +39,8 @@ namespace MiaCore.Extensions
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
 
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             var types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
                 .Where(p => typeof(IEntity).IsAssignableFrom(p) && !p.IsInterface);
