@@ -8,8 +8,8 @@ namespace MiaCore.Infrastructure.Persistence
     public class DynamicQueryBuilder
     {
         private string _table;
-        private string _select;
-        private string _from;
+        private string _fields;
+        private string _join;
         private string _where;
         private string _limit;
         private string _order;
@@ -19,8 +19,7 @@ namespace MiaCore.Infrastructure.Persistence
         public DynamicQueryBuilder(Type entityType)
         {
             _table = convertName(entityType.Name);
-            _select = $"SELECT {_table}.*";
-            _from = $"from {_table}";
+            _fields = $"{_table}.*";
             _where = "";
             _limit = "";
             _order = "";
@@ -34,16 +33,16 @@ namespace MiaCore.Infrastructure.Persistence
         public DynamicQueryBuilder WithOne(string tableName)
         {
             tableName = convertName(tableName);
-            _select += $",{tableName}.*";
-            _from += $" left join {tableName} on {tableName}.id = {_table}.{getColumnName(tableName)}";
+            _fields += $",{tableName}.*";
+            _join += $" left join {tableName} on {tableName}.id = {_table}.{getColumnName(tableName)}";
             return this;
         }
 
         public DynamicQueryBuilder WithMany(string tableName)
         {
             tableName = convertName(tableName);
-            _select += $",{tableName}.*";
-            _from += $" left join {tableName} on {tableName}.{getColumnName(_table)} = {_table}.id";
+            _fields += $",{tableName}.*";
+            _join += $" left join {tableName} on {tableName}.{getColumnName(_table)} = {_table}.id";
             return this;
         }
 
@@ -91,10 +90,13 @@ namespace MiaCore.Infrastructure.Persistence
 
         public string Build()
         {
-            var select = _isCount ? "select count(1) Count" : _select;
+            var fields = _isCount ? $"count(distinct {_table}.id) Count" : _fields;
             var limit = _isCount ? "" : _limit;
 
-            return $"{select} {_from} {_where} {_order} {limit}";
+            return string.IsNullOrEmpty(_limit) ?
+                $"SELECT {fields} from {_table} {_join} {_where} {_order} {limit}" :
+                $"SELECT {fields} from (select * from {_table} {_where} {_order} {limit}) as {_table} {_join}"
+                ;
         }
 
         private string convertName(string name)
