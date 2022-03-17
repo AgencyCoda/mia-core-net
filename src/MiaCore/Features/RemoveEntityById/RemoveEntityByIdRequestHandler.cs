@@ -6,7 +6,7 @@ using MiaCore.Models;
 
 namespace MiaCore.Features.RemoveEntityById
 {
-    internal class RemoveEntityByIdRequestHandler<T> : IRequestHandler<RemoveEntityByIdRequest<T>, object> where T : IEntity
+    public class RemoveEntityByIdRequestHandler<T> : IRequestHandler<RemoveEntityByIdRequest<T>, object> where T : IEntity
     {
         private readonly IGenericRepository<T> _repository;
         public RemoveEntityByIdRequestHandler(IGenericRepository<T> repository)

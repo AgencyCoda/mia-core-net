@@ -60,7 +60,7 @@ namespace MiaCore.Extensions
 
                 //Generic Get
                 var requestType2 = typeof(FetchEntityByIdRequest<>).MakeGenericType(type);
-                var inter2 = typeof(IRequestHandler<,>).MakeGenericType(requestType2, type);
+                var inter2 = typeof(IRequestHandler<,>).MakeGenericType(requestType2, typeof(object));
                 var impl2 = typeof(FetchEntityByIdRequestHandler<>).MakeGenericType(type);
                 services.AddScoped(inter2, impl2);
             }
