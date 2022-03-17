@@ -1,7 +1,7 @@
 using MediatR;
 using MiaCore.Models;
 
-namespace MiaCore.Features.SaveBillingInfo
+namespace MiaCore.Features.MiaBilling.SaveBillingInfo
 {
     public class SaveBillingInfoRequest : IRequest<MiaBillingInfo>
     {

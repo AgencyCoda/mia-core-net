@@ -4,7 +4,7 @@ using MediatR;
 using MiaCore.Infrastructure.Persistence;
 using MiaCore.Models;
 
-namespace MiaCore.Features.FetchMiaBillingInfo
+namespace MiaCore.Features.MiaBilling.FetchMiaBillingInfo
 {
     internal class FetchMiaBillingInfoRequestHandler : IRequestHandler<FetchMiaBillingInfoRequest, MiaBillingInfo>
     {
@@ -17,7 +17,7 @@ namespace MiaCore.Features.FetchMiaBillingInfo
 
         public async Task<MiaBillingInfo> Handle(FetchMiaBillingInfoRequest request, CancellationToken cancellationToken)
         {
-            return await _repo.GetByAsync(new Where(nameof(MiaBillingInfo.UserId), request.Id));
+            return await _repo.GetLastByAsync(new Where(nameof(MiaBillingInfo.UserId), request.Id));
         }
     }
 }

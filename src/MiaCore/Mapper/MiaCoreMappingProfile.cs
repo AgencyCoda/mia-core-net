@@ -5,12 +5,13 @@ using MiaCore.Features;
 using MiaCore.Features.CreateUser;
 using MiaCore.Features.Login;
 using MiaCore.Features.Register;
-using MiaCore.Features.SaveBillingInfo;
+using MiaCore.Features.MiaBilling.SaveBillingInfo;
 using MiaCore.Features.SaveCategory;
 using MiaCore.Features.UpdateProfile;
 using MiaCore.Infrastructure.Persistence;
 using MiaCore.Models;
 using MiaCore.Utils;
+using MiaCore.Features.MiaDevices.Register;
 
 namespace MiaCore.Mapper
 {
@@ -31,12 +32,11 @@ namespace MiaCore.Mapper
             CreateMap<MiaUser, MiaUserDto>();
             CreateMap<SaveCategoryRequest, MiaCategory>();
             CreateMap<MiaCategory, CategoryDto>();
-            // CreateMap<SaveNewsRequest, News>()
-            //     .ForMember(x => x.Content, a => a.MapFrom(f => JsonSerializer.Serialize(f.Content, options)));
             CreateMap<SaveBillingInfoRequest, MiaBillingInfo>();
             CreateMap(typeof(GenericListResponse<>), typeof(GenericListResponse<>));
-            // CreateMap<News, NewsDto>()
-            //     .ForMember(x => x.Content, a => a.MapFrom(f => JsonSerializer.Deserialize<object>(f.Content, options)));
+            CreateMap<RegisterMiaDeviceRequest, MiaDevice>()
+                .ForMember(x => x.DeviceToken, x => x.MapFrom(a => a.Token))
+                .ForMember(x => x.DeviceType, x => x.MapFrom(a => a.Type));
         }
     }
 }

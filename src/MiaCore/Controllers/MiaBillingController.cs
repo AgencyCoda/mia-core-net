@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
-using MiaCore.Features.FetchMiaBillingInfo;
-using MiaCore.Features.SaveBillingInfo;
+using MiaCore.Features.MiaBilling.FetchCurrentBillingInfo;
+using MiaCore.Features.MiaBilling.FetchMiaBillingInfo;
+using MiaCore.Features.MiaBilling.SaveBillingInfo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,12 @@ namespace MiaCore.Controllers
         public async Task<IActionResult> Fetch(long id)
         {
             return Ok(await Mediator.Send(new FetchMiaBillingInfoRequest { Id = id }));
+        }
+
+        [HttpGet("info/me")]
+        public async Task<IActionResult> FetchCurrent()
+        {
+            return Ok(await Mediator.Send(new FetchCurrentBillingInfoRequest()));
         }
     }
 }

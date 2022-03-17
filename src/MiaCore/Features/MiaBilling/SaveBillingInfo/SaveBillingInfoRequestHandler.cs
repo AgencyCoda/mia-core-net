@@ -7,7 +7,7 @@ using MiaCore.Infrastructure.Persistence;
 using MiaCore.Models;
 using MiaCore.Utils;
 
-namespace MiaCore.Features.SaveBillingInfo
+namespace MiaCore.Features.MiaBilling.SaveBillingInfo
 {
     internal class SaveBillingInfoRequestHandler : IRequestHandler<SaveBillingInfoRequest, MiaBillingInfo>
     {

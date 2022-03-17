@@ -1,7 +1,7 @@
 using MediatR;
 using MiaCore.Models;
 
-namespace MiaCore.Features.FetchMiaBillingInfo
+namespace MiaCore.Features.MiaBilling.FetchMiaBillingInfo
 {
     public class FetchMiaBillingInfoRequest : IRequest<MiaBillingInfo>
     {
