@@ -6,6 +6,7 @@ using MiaCore.Features.FetchProfile;
 using MiaCore.Features.Firebase;
 using MiaCore.Features.GenerictList;
 using MiaCore.Features.Login;
+using MiaCore.Features.MiaDevices.Register;
 using MiaCore.Features.RecoveryPassword;
 using MiaCore.Features.Register;
 using MiaCore.Features.RemoveEntityById;
@@ -94,6 +95,12 @@ namespace MiaCore.Controllers
         public async Task<IActionResult> FetchUser(long id, [FromQuery] string withs)
         {
             return Ok(await Mediator.Send(new FetchEntityByIdRequest<MiaUser> { Id = id, Withs = withs }));
+        }
+
+        [HttpPost("register-device")]
+        public async Task<IActionResult> RegisterDevice(RegisterMiaDeviceRequest request)
+        {
+            return Ok(await Mediator.Send(request));
         }
     }
 }
