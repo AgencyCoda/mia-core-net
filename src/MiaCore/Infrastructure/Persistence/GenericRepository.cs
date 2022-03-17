@@ -72,7 +72,7 @@ namespace MiaCore.Infrastructure.Persistence
         public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
             var query = "select * from " + Tablename;
-            if (typeof(T).IsAssignableFrom(typeof(IDeletableEntity)))
+            if (typeof(IDeletableEntity).IsAssignableFrom(typeof(T)))
                 query += " where deleted = 0";
             return await Connection.QueryAsync<T>(query);
         }
@@ -208,7 +208,7 @@ namespace MiaCore.Infrastructure.Persistence
         public virtual async Task<bool> DeleteAsync(object id)
         {
             string query = "";
-            if (typeof(T).IsAssignableFrom(typeof(IDeletableEntity)))
+            if (typeof(IDeletableEntity).IsAssignableFrom(typeof(T)))
                 query = "update " + Tablename + " set deleted=1 where id = @id and deleted=0";
             else
                 query = "delete from " + Tablename + " where id = @id";

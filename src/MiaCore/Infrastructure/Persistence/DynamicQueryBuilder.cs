@@ -25,7 +25,7 @@ namespace MiaCore.Infrastructure.Persistence
             _order = "";
             _isCount = false;
 
-            if (entityType.IsAssignableFrom(typeof(IDeletableEntity)))
+            if (typeof(IDeletableEntity).IsAssignableFrom(entityType))
                 _where += $"where {_table}.deleted = 0 ";
 
         }
