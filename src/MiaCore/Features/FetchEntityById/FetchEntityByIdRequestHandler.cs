@@ -7,18 +7,15 @@ using MiaCore.Models;
 
 namespace MiaCore.Features.FetchEntityById
 {
-    internal class FetchEntityByIdRequestHandler<T> : IRequestHandler<FetchEntityByIdRequest<T>, T> where T : IEntity
+    public class FetchEntityByIdRequestHandler<T> : IRequestHandler<FetchEntityByIdRequest<T>, object> where T : IEntity
     {
         private readonly IGenericRepository<T> _repo;
-        private readonly IMapper _mapper;
-
-        public FetchEntityByIdRequestHandler(IGenericRepository<T> repo, IMapper mapper)
+        public FetchEntityByIdRequestHandler(IGenericRepository<T> repo)
         {
             _repo = repo;
-            _mapper = mapper;
         }
 
-        public async Task<T> Handle(FetchEntityByIdRequest<T> request, CancellationToken cancellationToken)
+        public async Task<object> Handle(FetchEntityByIdRequest<T> request, CancellationToken cancellationToken)
         {
             return await _repo.GetAsync(request.Id, request.Withs?.Split(','));
         }
