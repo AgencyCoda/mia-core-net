@@ -38,11 +38,18 @@ namespace MiaCore.Infrastructure.Persistence
             return this;
         }
 
-        public DynamicQueryBuilder WithMany(string tableName)
+        public DynamicQueryBuilder WithMany(string tableName, string? intermediateTable = null)
         {
             tableName = convertName(tableName);
             _fields += $",{tableName}.*";
-            _join += $" left join {tableName} on {tableName}.{getColumnName(_table)} = {_table}.id";
+            if (intermediateTable is null)
+                _join += $" left join {tableName} on {tableName}.{getColumnName(_table)} = {_table}.id";
+            else
+            {
+                var intermediateTableName = convertName(intermediateTable);
+                _join += @$" left join {intermediateTableName} on {intermediateTableName}.{getColumnName(_table)} = {_table}.id 
+                         left join {tableName} on {tableName}.id = {intermediateTableName}.{getColumnName(tableName)}";
+            }
             return this;
         }
 

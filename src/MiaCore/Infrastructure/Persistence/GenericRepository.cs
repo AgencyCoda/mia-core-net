@@ -91,7 +91,8 @@ namespace MiaCore.Infrastructure.Persistence
             if (relatedEntities != null)
                 foreach (var item in relatedEntities)
                 {
-                    var propType = type.GetProperty(removeUndescores(item), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance)?.PropertyType;
+                    var prop = type.GetProperty(removeUndescores(item), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                    var propType = prop?.PropertyType;
                     if (propType is null)
                         throw new Exception($"Error. Field:{item} not found");
 
@@ -105,7 +106,13 @@ namespace MiaCore.Infrastructure.Persistence
                     if (!propertyIsList)
                         queryBuilder.WithOne(propType.Name);
                     else
-                        queryBuilder.WithMany(propType.Name);
+                    {
+                        string interm = null;
+                        if (prop.GetCustomAttribute<RelationAttribute>() is RelationAttribute attr && attr.IntermediateEntity != null)
+                            interm = attr.IntermediateEntity.Name;
+
+                        queryBuilder.WithMany(propType.Name, interm);
+                    }
 
                     types[i + 1] = propType;
                     i += 1;
@@ -125,6 +132,7 @@ namespace MiaCore.Infrastructure.Persistence
 
 
             var dic = new Dictionary<string, object>();
+            var existingIds = new HashSet<string>();
             var count = await Connection.ExecuteScalarAsync<long>(countQuery);
 
             var list = await Connection.QueryAsync(query, types, obj =>
@@ -137,7 +145,9 @@ namespace MiaCore.Infrastructure.Persistence
                 if (relatedEntities != null)
                     for (int i = 0; i < relatedEntities.Length; i++)
                     {
-                        var prop = currObj.GetType().GetProperty(removeUndescores(relatedEntities[0]), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                        if (obj[i + 1] is null)
+                            continue;
+                        var prop = currObj.GetType().GetProperty(removeUndescores(relatedEntities[i]), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                         if (typeof(IEnumerable).IsAssignableFrom(prop.PropertyType))
                         {
                             var res = prop.GetValue(currObj) as IList;
@@ -147,7 +157,12 @@ namespace MiaCore.Infrastructure.Persistence
                                 res = (IList)Activator.CreateInstance(t);
                                 prop.SetValue(currObj, res);
                             }
-                            res.Add(obj[i + 1]);
+                            string unique = prop.Name + obj[i + 1].GetType().GetProperty("Id").GetValue(obj[i + 1]).ToString();
+                            if (!existingIds.Contains(unique))
+                            {
+                                existingIds.Add(unique);
+                                res.Add(obj[i + 1]);
+                            }
                         }
                         else
                             prop.SetValue(currObj, obj[i + 1]);
