@@ -133,6 +133,7 @@ namespace MiaCore.Infrastructure.Persistence
 
             var dic = new Dictionary<string, object>();
             var existingIds = new HashSet<string>();
+
             var count = await Connection.ExecuteScalarAsync<long>(countQuery);
 
             var list = await Connection.QueryAsync(query, types, obj =>
@@ -140,7 +141,11 @@ namespace MiaCore.Infrastructure.Persistence
                 string id = obj[0].GetType().GetProperty("Id").GetValue(obj[0]).ToString();
                 object currObj;
                 if (!dic.TryGetValue(id, out currObj))
+                {
                     dic.Add(id, currObj = obj[0]);
+                    existingIds.Clear();
+                }
+
 
                 if (relatedEntities != null)
                     for (int i = 0; i < relatedEntities.Length; i++)
