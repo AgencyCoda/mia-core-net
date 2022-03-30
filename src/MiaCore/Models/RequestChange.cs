@@ -8,7 +8,7 @@ namespace MiaCore.Models
         public long UserId { get; set; }
         public int NewRole { get; set; }
         public string Message { get; set; }
-        public RequestChangeStatus Status { get; set; }
+        public int Status { get; set; }
     }
 
     public enum RequestChangeStatus
