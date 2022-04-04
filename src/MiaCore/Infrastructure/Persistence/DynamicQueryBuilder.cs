@@ -10,6 +10,7 @@ namespace MiaCore.Infrastructure.Persistence
         private string _table;
         private string _fields;
         private string _join;
+        private string _localJoin;
         private string _where;
         private string _limit;
         private string _order;
@@ -62,10 +63,19 @@ namespace MiaCore.Infrastructure.Persistence
                     if (!long.TryParse(where.Value, out _))
                         where.Value = $"\"{where.Value}\"";
 
+                    var table = _table;
+                    var split = where.Key.Split(".");
+                    if (split.Count() == 2)
+                    {
+                        table = split[0];
+                        where.Key = split[1];
+                        _localJoin += $" left join {table} on {table}.{getColumnName(_table)} = {_table}.id";
+                    }
+
                     _where += where.Type switch
                     {
-                        WhereConditionType.Likes => " CONCAT_WS(' '," + string.Join(",", where.Keys.Select(x => $"{_table}.{convertName(x)}")) + $") regexp {where.Value}",
-                        _ => $" {_table}.{convertName(where.Key)} = {where.Value}"
+                        WhereConditionType.Likes => " CONCAT_WS(' '," + string.Join(",", where.Keys.Select(x => $"{table}.{convertName(x)}")) + $") regexp {where.Value}",
+                        _ => $" {table}.{convertName(where.Key)} = {where.Value}"
                     };
                 }
             return this;
@@ -101,8 +111,8 @@ namespace MiaCore.Infrastructure.Persistence
             var limit = _isCount ? "" : _limit;
 
             return string.IsNullOrEmpty(_limit) ?
-                $"SELECT {fields} from {_table} {_join} {_where} {_order} {limit}" :
-                $"SELECT {fields} from (select * from {_table} {_where} {_order} {limit}) as {_table} {_join}"
+                $"SELECT {fields} from {_table} {_localJoin} {_join} {_where} {_order} {limit}" :
+                $"SELECT {fields} from (select {_table}.* from {_table} {_localJoin} {_where} {_order} {limit}) as {_table} {_join}"
                 ;
         }
 
