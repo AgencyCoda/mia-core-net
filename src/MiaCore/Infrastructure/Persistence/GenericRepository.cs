@@ -28,8 +28,8 @@ namespace MiaCore.Infrastructure.Persistence
         public virtual async Task<T> GetAsync(object id, string[] relatedEntities = null)
         {
             var where = new Where("id", id);
-            var list = await GetListAsync(wheres: new List<Where> { where }, relatedEntities: relatedEntities);
-            return list.Data.FirstOrDefault();
+            var (list, _) = await getListAsync(wheres: new List<Where> { where }, relatedEntities: relatedEntities, includeCount: false);
+            return list.FirstOrDefault();
         }
 
         public virtual async Task<T> GetByAsync(params Where[] filters)
@@ -39,8 +39,8 @@ namespace MiaCore.Infrastructure.Persistence
 
         public virtual async Task<T> GetByAsync(string[] relatedEntities = null, params Where[] filters)
         {
-            var list = await GetListAsync(wheres: filters.ToList(), relatedEntities: relatedEntities, limit: 1, page: 1);
-            return list.Data.FirstOrDefault();
+            var (list, _) = await getListAsync(wheres: filters.ToList(), relatedEntities: relatedEntities, limit: 1, page: 1, includeCount: false);
+            return list.FirstOrDefault();
         }
 
         public virtual async Task<T> GetFirstByAsync(params Where[] filters)
@@ -52,8 +52,8 @@ namespace MiaCore.Infrastructure.Persistence
         {
             var orders = new List<Order> { new Order { Field = "id", Type = OrderType.Asc } };
 
-            var list = await GetListAsync(wheres: filters.ToList(), relatedEntities: relatedEntities, limit: 1, page: 1, orders: orders);
-            return list.Data.FirstOrDefault();
+            var (list, _) = await getListAsync(wheres: filters.ToList(), relatedEntities: relatedEntities, limit: 1, page: 1, orders: orders, includeCount: false);
+            return list.FirstOrDefault();
         }
 
         public virtual async Task<T> GetLastByAsync(params Where[] filters)
@@ -65,8 +65,8 @@ namespace MiaCore.Infrastructure.Persistence
         {
             var orders = new List<Order> { new Order { Field = "id", Type = OrderType.Desc } };
 
-            var list = await GetListAsync(wheres: filters.ToList(), relatedEntities: relatedEntities, limit: 1, page: 1, orders: orders);
-            return list.Data.FirstOrDefault();
+            var (list, _) = await getListAsync(wheres: filters.ToList(), relatedEntities: relatedEntities, limit: 1, page: 1, orders: orders, includeCount: false);
+            return list.FirstOrDefault();
         }
 
         public virtual async Task<IEnumerable<T>> GetAllAsync()
@@ -77,7 +77,7 @@ namespace MiaCore.Infrastructure.Persistence
             return await Connection.QueryAsync<T>(query);
         }
 
-        public async Task<GenericListResponse<T>> GetListAsync(List<Where> wheres = null, List<Order> orders = null, int? limit = null, int? page = null, string[] relatedEntities = null)
+        private async Task<(IEnumerable<T>, long?)> getListAsync(List<Where> wheres = null, List<Order> orders = null, int? limit = null, int? page = null, string[] relatedEntities = null, bool includeCount = true)
         {
             var type = typeof(T);
 
@@ -134,7 +134,9 @@ namespace MiaCore.Infrastructure.Persistence
             var dic = new Dictionary<string, object>();
             var existingIds = new HashSet<string>();
 
-            var count = await Connection.ExecuteScalarAsync<long>(countQuery);
+            long? count = null;
+            if (includeCount)
+                count = await Connection.ExecuteScalarAsync<long>(countQuery);
 
             var list = await Connection.QueryAsync(query, types, obj =>
             {
@@ -177,9 +179,15 @@ namespace MiaCore.Infrastructure.Persistence
             // , splitOn: relatedEntities.Length > 0 ? splitColumns : null
             );
             list = list.Distinct();
+            return (list, count);
+        }
+
+        public async Task<GenericListResponse<T>> GetListAsync(List<Where> wheres = null, List<Order> orders = null, int? limit = null, int? page = null, string[] relatedEntities = null)
+        {
+            var (list, count) = await getListAsync(wheres, orders, limit, page, relatedEntities, true);
             var result = new GenericListResponse<T>
             {
-                Total = count,
+                Total = count ?? 0,
                 Data = list,
                 CurrentPage = page is null || page <= 0 ? 1 : page.Value,
                 PerPage = limit ?? 0

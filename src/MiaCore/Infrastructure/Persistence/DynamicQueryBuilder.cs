@@ -75,6 +75,7 @@ namespace MiaCore.Infrastructure.Persistence
                     _where += where.Type switch
                     {
                         WhereConditionType.Likes => " CONCAT_WS(' '," + string.Join(",", where.Keys.Select(x => $"{table}.{convertName(x)}")) + $") regexp {where.Value}",
+                        WhereConditionType.In => $" {table}.{convertName(where.Key)} in ({where.Value})",
                         _ => $" {table}.{convertName(where.Key)} = {where.Value}"
                     };
                 }

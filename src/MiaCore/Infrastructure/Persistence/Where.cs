@@ -13,6 +13,12 @@ namespace MiaCore.Infrastructure.Persistence
             Key = key;
             Value = value.ToString();
         }
+        public Where(string key, object value, WhereConditionType type)
+        {
+            Key = key;
+            Value = value.ToString();
+            Type = type;
+        }
 
         public WhereConditionType Type { get; set; } = WhereConditionType.Equal;
         public string Key { get; set; }
@@ -23,6 +29,7 @@ namespace MiaCore.Infrastructure.Persistence
     public enum WhereConditionType
     {
         Equal,
-        Likes
+        Likes,
+        In
     }
 }
