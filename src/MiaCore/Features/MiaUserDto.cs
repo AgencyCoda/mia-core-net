@@ -9,6 +9,7 @@ namespace MiaCore.Features
         public string Lastname { get; set; }
         public string Email { get; set; }
         public string Photo { get; set; }
+        public string Phone { get; set; }
         public string FacebookId { get; set; }
         public int Role { get; set; }
         public DateTime CreatedAt { get; set; }

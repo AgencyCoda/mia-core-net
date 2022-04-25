@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MediatR;
 using MiaCore.Infrastructure.Persistence;
@@ -12,5 +13,14 @@ namespace MiaCore.Features.GenerictList
         public int? Page { get; set; } = 1;
         public List<Where> Wheres { get; set; }
         public List<Order> Orders { get; set; }
+        private Type ReturnType;
+        public void SetReturnType<Dto>()
+        {
+            var tp = typeof(GenericListResponse<>);
+            ReturnType = tp.MakeGenericType(typeof(Dto));
+        }
+        public Type GetReturnType()
+            => ReturnType;
+
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using MediatR;
 using MiaCore.Models;
 
@@ -7,5 +8,10 @@ namespace MiaCore.Features.FetchEntityById
     {
         public long Id { get; set; }
         public string Withs { get; set; }
+        private Type ReturnType;
+        public void SetReturnType<Dto>()
+            => ReturnType = typeof(Dto);
+        public Type GetReturnType()
+            => ReturnType;
     }
 }
