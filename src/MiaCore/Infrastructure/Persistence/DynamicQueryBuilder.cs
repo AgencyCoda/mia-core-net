@@ -37,7 +37,7 @@ namespace MiaCore.Infrastructure.Persistence
             tableName = convertName(tableName);
             _joinCounter += 1;
             var alias = tableName + _joinCounter;
-            _fields += $",{tableName}.*";
+            _fields += $",{alias}.*";
             _join += $" left join {tableName} as {alias} on {alias}.id = {_table}.{getColumnName(tableName)}";
             return this;
         }
@@ -59,8 +59,9 @@ namespace MiaCore.Infrastructure.Persistence
             else
             {
                 var intermediateTableName = convertName(intermediateTable);
-                _join += @$" left join {intermediateTableName} on {intermediateTableName}.{getColumnName(_table)} = {_table}.id 
-                         left join {tableName} on {tableName}.id = {intermediateTableName}.{getColumnName(tableName)}";
+                var intermAlias = intermediateTableName + _joinCounter;
+                _join += @$" left join {intermediateTableName} as {intermAlias} on {intermAlias}.{getColumnName(_table)} = {_table}.id 
+                         left join {tableName} as {alias} on {alias}.id = {intermAlias}.{getColumnName(tableName)}";
             }
             return this;
         }
