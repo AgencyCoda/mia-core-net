@@ -14,10 +14,11 @@ namespace MiaCore.Features.GenerictList
         public List<Where> Wheres { get; set; }
         public List<Order> Orders { get; set; }
         private Type ReturnType;
-        public void SetReturnType<Dto>()
+        public GenerictListRequest<T> SetReturnType<Dto>()
         {
             var tp = typeof(GenericListResponse<>);
             ReturnType = tp.MakeGenericType(typeof(Dto));
+            return this;
         }
         public Type GetReturnType()
             => ReturnType;

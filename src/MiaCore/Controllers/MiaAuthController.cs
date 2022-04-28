@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using MiaCore.Features;
 using MiaCore.Features.CreateUser;
 using MiaCore.Features.CurrentUserPlan;
 using MiaCore.Features.FetchEntityById;
@@ -70,7 +71,7 @@ namespace MiaCore.Controllers
         [HttpPost("user/list")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> UserList(GenerictListRequest<MiaUser> request)
-        => Ok(await Mediator.Send(request));
+        => Ok(await Mediator.Send(request.SetReturnType<MiaUserDto>()));
 
         [HttpPost("user/plan/list")]
         [Authorize(Roles = "admin")]
@@ -94,7 +95,10 @@ namespace MiaCore.Controllers
         [HttpGet("user/fetch/{id}")]
         public async Task<IActionResult> FetchUser(long id, [FromQuery] string withs)
         {
-            return Ok(await Mediator.Send(new FetchEntityByIdRequest<MiaUser> { Id = id, Withs = withs }));
+            return Ok(await Mediator.Send(
+                new FetchEntityByIdRequest<MiaUser> { Id = id, Withs = withs }
+                    .SetReturnType<MiaUserDto>()
+                ));
         }
 
         [HttpPost("register-device")]

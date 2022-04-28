@@ -9,8 +9,11 @@ namespace MiaCore.Features.FetchEntityById
         public long Id { get; set; }
         public string Withs { get; set; }
         private Type ReturnType;
-        public void SetReturnType<Dto>()
-            => ReturnType = typeof(Dto);
+        public FetchEntityByIdRequest<T> SetReturnType<Dto>()
+        {
+            ReturnType = typeof(Dto);
+            return this;
+        }
         public Type GetReturnType()
             => ReturnType;
     }

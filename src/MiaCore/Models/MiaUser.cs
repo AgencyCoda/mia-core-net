@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MiaCore.Models.Enums;
 
 namespace MiaCore.Models
 {
@@ -17,10 +18,10 @@ namespace MiaCore.Models
         public int Status { get; set; }
         public bool IsNotification { get; set; }
         public string Caption { get; set; }
-        public bool VerifiedStatus { get; set; }
-        public bool IdentificationType { get; set; }
-        public bool IdentificationFrontUrl { get; set; }
-        public bool IdentificationBackUrl { get; set; }
+        public int VerifiedStatus { get; set; }
+        public UserIdentificationType IdentificationType { get; set; }
+        public string IdentificationFrontUrl { get; set; }
+        public string IdentificationBackUrl { get; set; }
         [Relation]
         public List<MiaUserCategory> Categories { get; set; }
 
