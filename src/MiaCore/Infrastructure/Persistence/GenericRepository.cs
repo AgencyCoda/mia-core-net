@@ -108,10 +108,17 @@ namespace MiaCore.Infrastructure.Persistence
                     else
                     {
                         string interm = null;
-                        if (prop.GetCustomAttribute<RelationAttribute>() is RelationAttribute attr && attr.IntermediateEntity != null)
-                            interm = attr.IntermediateEntity.Name;
+                        string joinField = null;
+                        if (prop.GetCustomAttribute<RelationAttribute>() is RelationAttribute attr)
+                        {
+                            if (attr.IntermediateEntity != null)
+                                interm = attr.IntermediateEntity.Name;
 
-                        queryBuilder.WithMany(propType.Name, interm);
+                            if (attr.JoinField != null)
+                                joinField = attr.JoinField;
+                        }
+
+                        queryBuilder.WithMany(propType.Name, intermediateTable: interm, joinField: joinField);
                     }
 
                     types[i + 1] = propType;

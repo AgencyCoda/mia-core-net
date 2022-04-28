@@ -15,6 +15,7 @@ namespace MiaCore.Infrastructure.Persistence
         private string _limit;
         private string _order;
         private bool _isCount;
+        private int _joinCounter;
 
 
         public DynamicQueryBuilder(Type entityType)
@@ -34,17 +35,27 @@ namespace MiaCore.Infrastructure.Persistence
         public DynamicQueryBuilder WithOne(string tableName)
         {
             tableName = convertName(tableName);
+            _joinCounter += 1;
+            var alias = tableName + _joinCounter;
             _fields += $",{tableName}.*";
-            _join += $" left join {tableName} on {tableName}.id = {_table}.{getColumnName(tableName)}";
+            _join += $" left join {tableName} as {alias} on {alias}.id = {_table}.{getColumnName(tableName)}";
             return this;
         }
 
-        public DynamicQueryBuilder WithMany(string tableName, string? intermediateTable = null)
+        public DynamicQueryBuilder WithMany(string tableName, string? intermediateTable = null, string joinField = null)
         {
+            if (string.IsNullOrEmpty(joinField))
+                joinField = getColumnName(_table);
+            else
+                joinField = convertName(joinField);
+
             tableName = convertName(tableName);
-            _fields += $",{tableName}.*";
+            _joinCounter += 1;
+            var alias = tableName + _joinCounter;
+
+            _fields += $",{alias}.*";
             if (intermediateTable is null)
-                _join += $" left join {tableName} on {tableName}.{getColumnName(_table)} = {_table}.id";
+                _join += $" left join {tableName} as {alias} on {alias}.{joinField} = {_table}.id";
             else
             {
                 var intermediateTableName = convertName(intermediateTable);

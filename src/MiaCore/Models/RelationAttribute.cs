@@ -5,6 +5,7 @@ namespace MiaCore.Models
     public class RelationAttribute : Attribute
     {
         public Type IntermediateEntity { get; set; }
+        public string JoinField { get; set; }
 
         public RelationAttribute()
         {
@@ -14,6 +15,11 @@ namespace MiaCore.Models
         public RelationAttribute(Type intermediateEntity)
         {
             IntermediateEntity = intermediateEntity;
+        }
+
+        public RelationAttribute(string joinField)
+        {
+            JoinField = joinField;
         }
     }
 }
