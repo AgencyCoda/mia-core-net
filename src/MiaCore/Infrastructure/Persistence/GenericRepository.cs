@@ -103,23 +103,22 @@ namespace MiaCore.Infrastructure.Persistence
                         propType = propType.GenericTypeArguments[0];
                     }
 
-                    if (!propertyIsList)
-                        queryBuilder.WithOne(propType.Name);
-                    else
+
+                    string interm = null;
+                    string joinField = null;
+                    if (prop.GetCustomAttribute<RelationAttribute>() is RelationAttribute attr)
                     {
-                        string interm = null;
-                        string joinField = null;
-                        if (prop.GetCustomAttribute<RelationAttribute>() is RelationAttribute attr)
-                        {
-                            if (attr.IntermediateEntity != null)
-                                interm = attr.IntermediateEntity.Name;
+                        if (attr.IntermediateEntity != null)
+                            interm = attr.IntermediateEntity.Name;
 
-                            if (attr.JoinField != null)
-                                joinField = attr.JoinField;
-                        }
-
-                        queryBuilder.WithMany(propType.Name, intermediateTable: interm, joinField: joinField);
+                        if (attr.JoinField != null)
+                            joinField = attr.JoinField;
                     }
+
+                    if (!propertyIsList)
+                        queryBuilder.WithOne(propType.Name, joinField);
+                    else
+                        queryBuilder.WithMany(propType.Name, intermediateTable: interm, joinField: joinField);
 
                     types[i + 1] = propType;
                     i += 1;

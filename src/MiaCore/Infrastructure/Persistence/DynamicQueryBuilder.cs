@@ -32,13 +32,19 @@ namespace MiaCore.Infrastructure.Persistence
 
         }
 
-        public DynamicQueryBuilder WithOne(string tableName)
+        public DynamicQueryBuilder WithOne(string tableName, string joinField = null)
         {
             tableName = convertName(tableName);
+
+            if (string.IsNullOrEmpty(joinField))
+                joinField = getColumnName(tableName);
+            else
+                joinField = convertName(joinField);
+
             _joinCounter += 1;
             var alias = tableName + _joinCounter;
             _fields += $",{alias}.*";
-            _join += $" left join {tableName} as {alias} on {alias}.id = {_table}.{getColumnName(tableName)}";
+            _join += $" left join {tableName} as {alias} on {alias}.id = {_table}.{joinField}";
             return this;
         }
 
