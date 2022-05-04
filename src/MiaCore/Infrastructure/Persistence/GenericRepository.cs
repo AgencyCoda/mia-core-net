@@ -77,7 +77,7 @@ namespace MiaCore.Infrastructure.Persistence
             return await Connection.QueryAsync<T>(query);
         }
 
-        private async Task<(IEnumerable<T>, long?)> getListAsync(List<Where> wheres = null, List<Order> orders = null, int? limit = null, int? page = null, string[] relatedEntities = null, bool includeCount = true)
+        protected async Task<(IEnumerable<T>, long?)> getListAsync(List<Where> wheres = null, List<Order> orders = null, int? limit = null, int? page = null, string[] relatedEntities = null, bool includeCount = true)
         {
             var type = typeof(T);
 
