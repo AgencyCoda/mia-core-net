@@ -61,10 +61,12 @@ namespace MiaCore.Controllers
         => Ok(await Mediator.Send(request));
 
         [HttpPost("recovery")]
+        [AllowAnonymous]
         public async Task<IActionResult> RecoveryPassword(RecoveryPasswordRequest request)
         => Ok(await Mediator.Send(request));
 
         [HttpPost("change-password-recovery")]
+        [AllowAnonymous]
         public async Task<IActionResult> ChangePassword(ChangePasswordRecoveryRequest request)
         => Ok(await Mediator.Send(request));
 

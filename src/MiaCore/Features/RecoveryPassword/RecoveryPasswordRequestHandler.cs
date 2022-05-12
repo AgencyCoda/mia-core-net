@@ -40,7 +40,7 @@ namespace MiaCore.Features.RecoveryPassword
 
             await _recoveryRepository.InsertAsync(recovery);
 
-            var baseUrl = string.Format("{0}://{1}{2}", _context.Request.Scheme, _context.Request.Host, _context.Request.Path);
+            var baseUrl = string.Format("https://{0}{1}", _context.Request.Host, _context.Request.Path);
 
             await _mailService.SendAsync(user.Email, "Recovery Password", "recovery-password", new { token, email = request.Email, baseUrl });
             return new { Success = true };
