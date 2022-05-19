@@ -22,6 +22,7 @@ namespace MiaCore.Models
         public UserIdentificationType IdentificationType { get; set; }
         public string IdentificationFrontUrl { get; set; }
         public string IdentificationBackUrl { get; set; }
+        public int CredibilityPoints { get; set; }
         [Relation]
         public List<MiaUserCategory> Categories { get; set; }
 

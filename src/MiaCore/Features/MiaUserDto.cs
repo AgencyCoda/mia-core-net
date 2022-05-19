@@ -19,6 +19,7 @@ namespace MiaCore.Features
         public int Status { get; set; }
         public bool IsNotification { get; set; }
         public string Caption { get; set; }
+        public int CredibilityPoints { get; set; }
         public List<MiaUserCategory> Categories { get; set; }
 
         public List<RequestChange> RequestChanges { get; set; }
