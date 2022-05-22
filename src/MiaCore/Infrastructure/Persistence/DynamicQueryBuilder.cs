@@ -82,12 +82,15 @@ namespace MiaCore.Infrastructure.Persistence
                         where.Value = $"\"{where.Value}\"";
 
                     var table = _table;
-                    var split = where.Key.Split(".");
-                    if (split.Count() == 2)
+                    if (!string.IsNullOrEmpty(where.Key))
                     {
-                        table = split[0];
-                        where.Key = split[1];
-                        _localJoin += $" left join {table} on {table}.{getColumnName(_table)} = {_table}.id";
+                        var split = where.Key.Split(".");
+                        if (split.Count() == 2)
+                        {
+                            table = split[0];
+                            where.Key = split[1];
+                            _localJoin += $" left join {table} on {table}.{getColumnName(_table)} = {_table}.id";
+                        }
                     }
 
                     _where += where.Type switch
