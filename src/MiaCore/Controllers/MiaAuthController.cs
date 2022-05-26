@@ -87,7 +87,7 @@ namespace MiaCore.Controllers
             return Ok(await Mediator.Send(new CurrentUserPlanRequest { Id = id, Withs = withs }));
         }
 
-        [HttpPost("user/remove/{id}")]
+        [HttpDelete("user/remove/{id}")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> RemoveUser(long id)
         {
