@@ -32,7 +32,7 @@ namespace MiaCore.Infrastructure.Mail
 
             foreach (var item in dictionary)
             {
-                str = str.Replace($"{{{{{item.Key}}}}}", item.Value.ToString());
+                str = str.Replace($"{{{{{item.Key}}}}}", item.Value.ToString(), StringComparison.InvariantCultureIgnoreCase);
             }
             return str;
         }
