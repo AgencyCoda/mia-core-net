@@ -15,7 +15,7 @@ namespace MiaCore.Models
         public string Phone { get; set; }
         public string FacebookId { get; set; }
         public int Role { get; set; }
-        public int Status { get; set; }
+        public MiaUserStatus Status { get; set; }
         public bool IsNotification { get; set; }
         public string Caption { get; set; }
         public int VerifiedStatus { get; set; }

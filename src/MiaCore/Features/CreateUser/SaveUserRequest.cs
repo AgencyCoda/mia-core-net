@@ -1,4 +1,5 @@
 using MediatR;
+using MiaCore.Models.Enums;
 
 namespace MiaCore.Features.CreateUser
 {
@@ -12,6 +13,7 @@ namespace MiaCore.Features.CreateUser
         public string Email { get; set; }
         public string Password { get; set; }
         public string Photo { get; set; }
+        public MiaUserStatus Status { get; set; }
 
     }
 }

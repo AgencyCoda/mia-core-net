@@ -5,6 +5,7 @@ using AutoMapper;
 using MediatR;
 using MiaCore.Exceptions;
 using MiaCore.Infrastructure.Persistence;
+using MiaCore.Models.Enums;
 using Microsoft.Extensions.Options;
 
 namespace MiaCore.Features.Login
@@ -26,6 +27,9 @@ namespace MiaCore.Features.Login
         {
             var user = await _userRepository.LoginAsync(request.Email, request.Password);
             if (user is null)
+                throw new UnauthorizedException(ErrorMessages.IncorrectPassword);
+
+            if (user.Status == MiaUserStatus.Blocked)
                 throw new UnauthorizedException(ErrorMessages.IncorrectPassword);
 
             var response = _mapper.Map<LoginResponseDto>(user);
