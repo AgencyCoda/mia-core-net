@@ -30,7 +30,7 @@ namespace MiaCore.Features.Login
                 throw new UnauthorizedException(ErrorMessages.IncorrectPassword);
 
             if (user.Status == MiaUserStatus.Blocked)
-                throw new UnauthorizedException(ErrorMessages.IncorrectPassword);
+                throw new UnauthorizedException(ErrorMessages.UserIsBlocked);
 
             var response = _mapper.Map<LoginResponseDto>(user);
             response.TokenType = "bearer";
