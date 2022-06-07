@@ -18,6 +18,6 @@ namespace MiaCore.Exceptions
         public static KeyValuePair<int, string> RequestAlreadyExists { get; } = new KeyValuePair<int, string>(-13, "RequestChange already exists");
         public static KeyValuePair<int, string> DeviceAlreadyExists { get; } = new KeyValuePair<int, string>(-14, "Device already exists");
         public static KeyValuePair<int, string> NewsNotFound { get; } = new KeyValuePair<int, string>(-15, "News not found");
-        public static KeyValuePair<int, string> UserIsBlocked { get; } = new KeyValuePair<int, string>(-16, "he account is blocked, Please contact support to re-enable it");
+        public static KeyValuePair<int, string> UserIsBlocked { get; } = new KeyValuePair<int, string>(-16, "The account is blocked, Please contact support to re-enable it");
     }
 }
