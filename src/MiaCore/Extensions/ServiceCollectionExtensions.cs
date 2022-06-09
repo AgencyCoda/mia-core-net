@@ -18,6 +18,7 @@ using System.Linq;
 using Microsoft.Extensions.Configuration;
 using MiaCore.Features.RemoveEntityById;
 using MiaCore.Features.FetchEntityById;
+using MiaCore.Behaviours;
 
 namespace MiaCore.Extensions
 {
@@ -69,6 +70,7 @@ namespace MiaCore.Extensions
             services.AddHttpContextAccessor();
             services.AddScoped<UserHelper>();
             services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>(includeInternalTypes: true);
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddScoped<TemplateBuilder>();
 
             FirebaseApp.Create(new AppOptions()

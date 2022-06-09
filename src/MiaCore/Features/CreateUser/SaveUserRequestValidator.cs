@@ -1,20 +1,19 @@
 using FluentValidation;
-using MediatR;
 
-namespace MiaCore.Features.Register
+namespace MiaCore.Features.CreateUser
 {
-    internal class RegisterRequestValidator : AbstractValidator<RegisterRequest>
+    public class SaveUserRequestValidator : AbstractValidator<SaveUserRequest>
     {
-        public RegisterRequestValidator()
+        public SaveUserRequestValidator()
         {
             RuleFor(x => x.Email)
                 .NotEmpty()
                 .EmailAddress();
 
             RuleFor(x => x.Password)
-                .NotEmpty()
                 .MinimumLength(8)
-                .MaximumLength(25);
+                .MaximumLength(25)
+                .When(x => !string.IsNullOrEmpty(x.Password));
 
             RuleFor(x => x.Firstname)
                 .NotEmpty()
