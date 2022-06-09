@@ -7,6 +7,7 @@ using MiaCore.Exceptions;
 using MiaCore.Infrastructure.Persistence;
 using MiaCore.Models;
 using MiaCore.Utils;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace MiaCore.Features.Register
@@ -16,18 +17,21 @@ namespace MiaCore.Features.Register
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly MiaCoreOptions _options;
+        private readonly IConfiguration _config;
 
-        public RegisterRequestHandler(IUserRepository userRepository, IMapper mapper, IOptions<MiaCoreOptions> options)
+        public RegisterRequestHandler(IUserRepository userRepository, IMapper mapper, IOptions<MiaCoreOptions> options, IConfiguration config)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
+            _config = config;
         }
 
         public async Task<MiaUserDto> Handle(RegisterRequest request, CancellationToken cancellationToken)
         {
             var user = _mapper.Map<MiaUser>(request);
             user.Password = Hashing.GenerateSha256(user.Password);
+            user.CredibilityPoints = _config.GetSection("CredibilityPoints:StartingPoints").Get<decimal>();
 
             var existingUser = await _userRepository.GetByEmailAsync(request.Email);
             if (existingUser != null)

@@ -40,5 +40,18 @@ namespace MiaCore.Utils
 
             return _curentUser = user;
         }
+
+
+        public async Task AddUserCredibilityPoints(long userId, decimal points)
+        {
+            var user = await _userRepository.GetAsync(userId);
+            user.CredibilityPoints += points;
+            await _userRepository.UpdateAsync(user);
+        }
+
+        public async Task SubtractUserCredibilityPoints(long userId, decimal points)
+        {
+            await AddUserCredibilityPoints(userId, points * -1);
+        }
     }
 }
