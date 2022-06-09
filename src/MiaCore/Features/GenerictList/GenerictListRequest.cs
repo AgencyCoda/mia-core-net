@@ -11,6 +11,7 @@ namespace MiaCore.Features.GenerictList
         public string[] With { get; set; }
         public int? Limit { get; set; } = 10;
         public int? Page { get; set; } = 1;
+        public string Where { get; set; }
         public List<Where> Wheres { get; set; }
         public List<Order> Orders { get; set; }
         private Type ReturnType;
