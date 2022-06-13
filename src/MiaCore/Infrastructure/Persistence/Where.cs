@@ -24,12 +24,15 @@ namespace MiaCore.Infrastructure.Persistence
         public string Key { get; set; }
         public List<string> Keys { get; set; }
         public string Value { get; set; }
+        public string From { get; set; }
+        public string To { get; set; }
     }
 
     public enum WhereConditionType
     {
         Equal,
         Likes,
-        In
+        In,
+        Between
     }
 }
