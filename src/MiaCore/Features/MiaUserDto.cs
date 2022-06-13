@@ -19,7 +19,11 @@ namespace MiaCore.Features
         public int Status { get; set; }
         public bool IsNotification { get; set; }
         public string Caption { get; set; }
-        public int CredibilityPoints { get; set; }
+        public int VerifiedStatus { get; set; }
+        public int IdentificationType { get; set; }
+        public string IdentificationFrontUrl { get; set; }
+        public string IdentificationBackUrl { get; set; }
+        public decimal CredibilityPoints { get; set; }
         public List<MiaUserCategory> Categories { get; set; }
 
         public List<RequestChange> RequestChanges { get; set; }
