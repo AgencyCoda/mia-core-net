@@ -31,12 +31,12 @@ namespace MiaCore.Infrastructure.Mail
 
         public async Task SendAsync(string to, string subject, string templateSlug, object args)
         {
-            var html = await _templateBuilder.BuildAsync(templateSlug, args);
+            var (title, body) = await _templateBuilder.BuildAsync(templateSlug, args);
             var msg = new SendGridMessage()
             {
                 From = new EmailAddress(_options.EmailFrom, _options.EmailFromName),
-                Subject = subject,
-                HtmlContent = html
+                Subject = title,
+                HtmlContent = body
             };
             msg.AddTo(new EmailAddress(to));
 

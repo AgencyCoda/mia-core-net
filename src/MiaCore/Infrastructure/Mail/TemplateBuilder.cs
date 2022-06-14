@@ -16,14 +16,14 @@ namespace MiaCore.Infrastructure.Mail
         {
             _templateRepository = templateRepository;
         }
-        public async Task<string> BuildAsync(string templateSlug, object args)
+        public async Task<(string, string)> BuildAsync(string templateSlug, object args)
         {
             var template = await _templateRepository.GetByAsync(new Where(nameof(MiaEmailTemplate.Slug), templateSlug));
             if (template is null)
                 throw new Exception("template not found");
 
-            string html = replace(template.ContentText, args);
-            return html;
+            string body = replace(template.ContentText, args);
+            return (template.Title, body);
         }
 
         private string replace(string str, object args)

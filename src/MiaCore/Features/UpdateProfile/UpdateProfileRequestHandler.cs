@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using MiaCore.Exceptions;
 using MiaCore.Infrastructure.Persistence;
 using MiaCore.Models;
 using MiaCore.Utils;
@@ -28,6 +29,9 @@ namespace MiaCore.Features.UpdateProfile
         public async Task<MiaUserDto> Handle(UpdateProfileRequest request, CancellationToken cancellationToken)
         {
             var user = await _userHepler.GetUserAsync();
+
+            if (user.VerifiedStatus == Models.Enums.MiaUserVerifiedStatus.Verified && (request.Fullname != user.Fullname || request.Photo != user.Photo))
+                throw new BadRequestException(ErrorMessages.VerifiedUserCanNotChangeData);
 
             user = _mapper.Map<UpdateProfileRequest, MiaUser>(request, user);
 

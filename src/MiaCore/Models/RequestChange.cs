@@ -9,12 +9,13 @@ namespace MiaCore.Models
         public int NewRole { get; set; }
         public string Message { get; set; }
         public int Status { get; set; }
+        public string RejectReason { get; set; }
     }
 
     public enum RequestChangeStatus
     {
         Pending,
         Accepted,
-        Canceled
+        Rejected
     }
 }

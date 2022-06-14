@@ -9,6 +9,7 @@ namespace MiaCore.Models
         public long Id { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
+        public string Fullname { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public string Photo { get; set; }
@@ -18,7 +19,7 @@ namespace MiaCore.Models
         public MiaUserStatus Status { get; set; }
         public bool IsNotification { get; set; }
         public string Caption { get; set; }
-        public int VerifiedStatus { get; set; }
+        public MiaUserVerifiedStatus VerifiedStatus { get; set; }
         public UserIdentificationType IdentificationType { get; set; }
         public string IdentificationFrontUrl { get; set; }
         public string IdentificationBackUrl { get; set; }
