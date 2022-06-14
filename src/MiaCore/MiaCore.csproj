@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <PackageId>MiaCore</PackageId>
-    <Version>3.3.26</Version>
+    <Version>3.3.27</Version>
     <Authors>Shota Chinchaladze</Authors>
     <Company>AgencyCoda</Company>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
