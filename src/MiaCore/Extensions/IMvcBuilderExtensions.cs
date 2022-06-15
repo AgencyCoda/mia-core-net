@@ -23,7 +23,7 @@ namespace MiaCore.Extensions
                     var snakeCasePolicy = new SnakeCaseNamingPolicy();
                     op.JsonSerializerOptions.PropertyNamingPolicy = snakeCasePolicy;
                     op.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-                    op.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(snakeCasePolicy));
+                    // op.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(snakeCasePolicy));
                 });
             return builder;
         }
