@@ -1,6 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using MiaCore.Exceptions;
 using MiaCore.Models;
 
 namespace MiaCore.Infrastructure.Persistence
@@ -16,10 +19,12 @@ namespace MiaCore.Infrastructure.Persistence
         private string _order;
         private bool _isCount;
         private int _joinCounter;
+        private Type _entityType;
 
 
         public DynamicQueryBuilder(Type entityType)
         {
+            _entityType = entityType;
             _table = convertName(entityType.Name);
             _fields = $"{_table}.*";
             _where = "";
@@ -87,9 +92,24 @@ namespace MiaCore.Infrastructure.Persistence
                         var split = where.Key.Split(".");
                         if (split.Count() == 2)
                         {
-                            table = split[0];
+                            var prop = _entityType.GetProperty(split[0], BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                            if (prop is null)
+                                throw new Exception($"Error. Field:{split[1]} not found");
+                            var isList = false;
+                            if (typeof(IEnumerable).IsAssignableFrom(prop.PropertyType))
+                                isList = true;
+
+                            _joinCounter += 1;
+                            table = convertName(isList ? prop.PropertyType.GenericTypeArguments[0].Name : prop.PropertyType.Name);
+                            var alias = table + _joinCounter;
+
                             where.Key = split[1];
-                            _localJoin += $" left join {table} on {table}.{getColumnName(_table)} = {_table}.id";
+
+                            if (isList)
+                                _localJoin += $" left join {table} as {alias} on {alias}.{getColumnName(_table)} = {_table}.id";
+                            else
+                                _localJoin += $" left join {table} as {alias} on {alias}.id = {_table}.{getColumnName(table)}";
+                            table = alias;
                         }
                     }
 
