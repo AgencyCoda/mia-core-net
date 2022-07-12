@@ -13,6 +13,7 @@ using MiaCore.Features.Register;
 using MiaCore.Features.RemoveEntityById;
 using MiaCore.Features.UpdateProfile;
 using MiaCore.Models;
+using MiaCore.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,7 +38,7 @@ namespace MiaCore.Controllers
         => Ok(await Mediator.Send(new FetchProfileRequest()));
 
         [HttpPost("user/save")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> SaveUser(SaveUserRequest request)
         => Ok(await Mediator.Send(request));
 
@@ -71,24 +72,24 @@ namespace MiaCore.Controllers
         => Ok(await Mediator.Send(request));
 
         [HttpPost("user/list")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = Roles.AdminOrAdministrator)]
         public async Task<IActionResult> UserList(GenerictListRequest<MiaUser> request)
         => Ok(await Mediator.Send(request.SetReturnType<MiaUserDto>()));
 
         [HttpPost("user/plan/list")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> UserPlanList(GenerictListRequest<MiaUserPlan> request)
         => Ok(await Mediator.Send(request));
 
         [HttpGet("user/plan/current/{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> UserPlanCurrent(int id, [FromQuery] string withs)
         {
             return Ok(await Mediator.Send(new CurrentUserPlanRequest { Id = id, Withs = withs }));
         }
 
         [HttpDelete("user/remove/{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> RemoveUser(long id)
         {
             return Ok(await Mediator.Send(new RemoveEntityByIdRequest<MiaUser> { Id = id }));

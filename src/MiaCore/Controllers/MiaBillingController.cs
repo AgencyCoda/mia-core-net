@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using MiaCore.Features.MiaBilling.FetchCurrentBillingInfo;
 using MiaCore.Features.MiaBilling.FetchMiaBillingInfo;
 using MiaCore.Features.MiaBilling.SaveBillingInfo;
+using MiaCore.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,12 +13,12 @@ namespace MiaCore.Controllers
     public class MiaBillingController : MiaControllerBase
     {
         [HttpPost("info/save")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Save(SaveBillingInfoRequest request)
         => Ok(await Mediator.Send(request));
 
         [HttpGet("info/fetch/{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Fetch(long id)
         {
             return Ok(await Mediator.Send(new FetchMiaBillingInfoRequest { Id = id }));

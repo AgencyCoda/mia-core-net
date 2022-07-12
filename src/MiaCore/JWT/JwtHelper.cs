@@ -48,7 +48,7 @@ namespace MiaCore.JWT
                 {
                     new Claim(ClaimTypes.Name, subject),
                     new Claim("UserId", subject),
-                    new Claim(ClaimTypes.Role, role ==1 ? "admin":"user"),
+                    new Claim(ClaimTypes.Role, role.ToString()),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(expirationMinutes),

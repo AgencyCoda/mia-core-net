@@ -3,6 +3,7 @@ using MiaCore.Features.AssignCategoryToUser;
 using MiaCore.Features.GenerictList;
 using MiaCore.Features.SaveCategory;
 using MiaCore.Models;
+using MiaCore.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +19,7 @@ namespace MiaCore.Controllers
         => Ok(await Mediator.Send(request));
 
         [HttpPost("save")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Save(SaveCategoryRequest request)
         => Ok(await Mediator.Send(request));
 
