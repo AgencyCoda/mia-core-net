@@ -33,6 +33,8 @@ namespace MiaCore.Infrastructure.Persistence
         Equal,
         Likes,
         In,
-        Between
+        Between,
+        IsNull,
+        IsNotNull
     }
 }

@@ -118,6 +118,8 @@ namespace MiaCore.Infrastructure.Persistence
                         WhereConditionType.Likes => " CONCAT_WS(' '," + string.Join(",", where.Keys.Select(x => $"{table}.{convertName(x)}")) + $") regexp {where.Value}",
                         WhereConditionType.In => $" {table}.{convertName(where.Key)} in ({where.Value})",
                         WhereConditionType.Between => $" {table}.{convertName(where.Key)} between '{where.From}' and '{where.To}'",
+                        WhereConditionType.IsNull => $" {table}.{convertName(where.Key)} is null",
+                        WhereConditionType.IsNotNull => $" {table}.{convertName(where.Key)} is not null",
                         _ => $" {table}.{convertName(where.Key)} = {where.Value}"
                     };
                 }
