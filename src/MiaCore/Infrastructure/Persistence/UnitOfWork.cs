@@ -18,11 +18,25 @@ namespace MiaCore.Infrastructure.Persistence
         }
         public async Task BeginTransactionAsync()
         {
-            _connection.Open();
+            if (_connection.State != System.Data.ConnectionState.Open)
+                _connection.Open();
+
             if (_transaction is not null)
                 throw new System.Exception("Transacrion is already opened");
 
             _transaction = await _connection.BeginTransactionAsync();
+        }
+
+        public async Task<bool> TryBeginTransactionAsync()
+        {
+            if (_connection.State != System.Data.ConnectionState.Open)
+                _connection.Open();
+
+            if (_transaction is not null)
+                return false;
+
+            _transaction = await _connection.BeginTransactionAsync();
+            return true;
         }
 
         public async Task CommitTransactionAsync()

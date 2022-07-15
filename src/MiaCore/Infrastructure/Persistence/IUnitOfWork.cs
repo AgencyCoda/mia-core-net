@@ -7,6 +7,7 @@ namespace MiaCore.Infrastructure.Persistence
     public interface IUnitOfWork : IDisposable
     {
         Task BeginTransactionAsync();
+        Task<bool> TryBeginTransactionAsync();
         Task CommitTransactionAsync();
         Task RollbackTransactionAsync();
         IGenericRepository<T> GetGenericRepository<T>() where T : IEntity;
