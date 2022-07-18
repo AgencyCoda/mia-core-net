@@ -24,6 +24,8 @@ namespace MiaCore.Models
         public string IdentificationFrontUrl { get; set; }
         public string IdentificationBackUrl { get; set; }
         public decimal CredibilityPoints { get; set; }
+        public decimal CredibilityPointsChecker { get; set; }
+        public decimal CredibilityPointsCreator { get; set; }
         [Relation]
         public List<MiaUserCategory> Categories { get; set; }
 

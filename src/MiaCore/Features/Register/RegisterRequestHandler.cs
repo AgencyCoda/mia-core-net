@@ -31,7 +31,6 @@ namespace MiaCore.Features.Register
         {
             var user = _mapper.Map<MiaUser>(request);
             user.Password = Hashing.GenerateSha256(user.Password);
-            user.CredibilityPoints = _config.GetSection("CredibilityPoints:StartingPoints").Get<decimal>();
 
             var existingUser = await _userRepository.GetByEmailAsync(request.Email);
             if (existingUser != null)
