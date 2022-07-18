@@ -11,5 +11,7 @@ namespace MiaCore.Features.Register
         public string Fullname { get; set; }
         public string Phone { get; set; }
         public string Photo { get; set; }
+        public string IdentificationFrontUrl { get; set; }
+        public bool InstitutionRegistration { get; set; }
     }
 }

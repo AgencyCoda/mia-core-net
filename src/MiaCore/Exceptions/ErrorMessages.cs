@@ -20,5 +20,6 @@ namespace MiaCore.Exceptions
         public static KeyValuePair<int, string> NewsNotFound { get; } = new KeyValuePair<int, string>(-15, "News not found");
         public static KeyValuePair<int, string> UserIsBlocked { get; } = new KeyValuePair<int, string>(-16, "The account is blocked, Please contact support to re-enable it");
         public static KeyValuePair<int, string> VerifiedUserCanNotChangeData { get; } = new KeyValuePair<int, string>(-17, "You can not change Fullname or Photo, Please contact support to change them");
+        public static KeyValuePair<int, string> WaitingForValidation { get; } = new KeyValuePair<int, string>(-18, "You cannot login until we validate your identity");
     }
 }

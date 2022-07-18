@@ -25,6 +25,11 @@ namespace MiaCore.Features.Register
                 .NotEmpty()
                 .MinimumLength(3)
                 .MaximumLength(100);
+
+            RuleFor(x => x.IdentificationFrontUrl)
+            .NotEmpty()
+            .NotNull()
+            .When(x => x.InstitutionRegistration);
         }
     }
 }

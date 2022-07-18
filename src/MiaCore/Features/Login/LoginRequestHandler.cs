@@ -32,6 +32,9 @@ namespace MiaCore.Features.Login
             if (user.Status == MiaUserStatus.Blocked)
                 throw new UnauthorizedException(ErrorMessages.UserIsBlocked);
 
+            if (user.Status == MiaUserStatus.WaitingForValidation)
+                throw new UnauthorizedException(ErrorMessages.WaitingForValidation);
+
             var response = _mapper.Map<LoginResponseDto>(user);
             response.TokenType = "bearer";
             response.AccessToken = JWT.JwtHelper.GenerateToken(_options.JwtSecret, _options.TokenExpirationMinutes, user.Id.ToString(), user.Role);

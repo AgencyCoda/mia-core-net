@@ -18,13 +18,15 @@ namespace MiaCore.Features.Register
         private readonly IMapper _mapper;
         private readonly MiaCoreOptions _options;
         private readonly IConfiguration _config;
+        private readonly IUnitOfWork _uow;
 
-        public RegisterRequestHandler(IUserRepository userRepository, IMapper mapper, IOptions<MiaCoreOptions> options, IConfiguration config)
+        public RegisterRequestHandler(IUserRepository userRepository, IMapper mapper, IOptions<MiaCoreOptions> options, IConfiguration config, IUnitOfWork uow)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
             _config = config;
+            _uow = uow;
         }
 
         public async Task<MiaUserDto> Handle(RegisterRequest request, CancellationToken cancellationToken)
@@ -36,10 +38,38 @@ namespace MiaCore.Features.Register
             if (existingUser != null)
                 throw new BadRequestException(ErrorMessages.EmailAlreadyExists);
 
-            user.Id = await _userRepository.InsertAsync(user);
+            try
+            {
+                await _uow.BeginTransactionAsync();
 
-            var response = _mapper.Map<MiaUserDto>(user);
-            return response;
+                var userSaveRepo = _uow.GetGenericRepository<MiaUser>();
+                var requestChangeRepo = _uow.GetGenericRepository<RequestChange>();
+
+                user.Id = await userSaveRepo.InsertAsync(user);
+
+                if (request.InstitutionRegistration)
+                {
+                    user.Status = Models.Enums.MiaUserStatus.WaitingForValidation;
+                    var requestChange = new RequestChange
+                    {
+                        NewRole = 4,
+                        UserId = user.Id,
+                        Message = "Institution Registration"
+                    };
+                    await requestChangeRepo.InsertAsync(requestChange);
+                    await userSaveRepo.UpdateAsync(user);
+                }
+
+                await _uow.CommitTransactionAsync();
+
+                var response = _mapper.Map<MiaUserDto>(user);
+                return response;
+            }
+            catch
+            {
+                await _uow.RollbackTransactionAsync();
+                throw;
+            }
         }
     }
 }
