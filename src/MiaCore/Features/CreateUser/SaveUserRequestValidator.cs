@@ -1,4 +1,6 @@
+using System.Linq;
 using FluentValidation;
+using MiaCore.Utils;
 
 namespace MiaCore.Features.CreateUser
 {
@@ -24,6 +26,9 @@ namespace MiaCore.Features.CreateUser
                 .NotEmpty()
                 .MinimumLength(3)
                 .MaximumLength(100);
+
+            RuleFor(x => x.Language)
+                .Must(x => Configs.AvailableLanguages.Contains(x));
         }
     }
 }

@@ -26,6 +26,8 @@ namespace MiaCore.Models
         public decimal CredibilityPoints { get; set; }
         public decimal CredibilityPointsChecker { get; set; }
         public decimal CredibilityPointsCreator { get; set; }
+        public string Language { get; set; }
+        public bool OtpEnabled { get; set; }
         [Relation]
         public List<MiaUserCategory> Categories { get; set; }
 

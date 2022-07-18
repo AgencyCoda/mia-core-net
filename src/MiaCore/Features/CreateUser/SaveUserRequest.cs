@@ -15,6 +15,7 @@ namespace MiaCore.Features.CreateUser
         public string Password { get; set; }
         public string Photo { get; set; }
         public MiaUserStatus Status { get; set; }
-
+        public string Language { get; set; }
+        public bool OtpEnabled { get; set; }
     }
 }
