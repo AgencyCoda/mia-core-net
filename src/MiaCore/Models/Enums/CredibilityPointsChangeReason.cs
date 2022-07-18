@@ -11,7 +11,7 @@ namespace MiaCore.Models.Enums
         KYC,
         Verified,
         ValidNews,
-        FakeNews
-
+        FakeNews,
+        NewsPurchase
     }
 }
