@@ -92,7 +92,7 @@ namespace MiaCore.Infrastructure.Persistence
                         var split = where.Key.Split(".");
                         if (split.Count() == 2)
                         {
-                            var prop = _entityType.GetProperty(split[0], BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                            var prop = _entityType.GetProperty(removeUndescores(split[0]), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                             if (prop is null)
                                 throw new Exception($"Error. Field:{split[1]} not found");
                             var isList = false;
@@ -170,5 +170,8 @@ namespace MiaCore.Infrastructure.Persistence
             tableName = tableName.StartsWith("mia_") ? tableName.Substring(4) : tableName;
             return tableName + "_id";
         }
+
+        private string removeUndescores(string name)
+        => name.Replace("_", "");
     }
 }
