@@ -17,15 +17,10 @@ namespace MiaCore.Features.CreateUser
                 .MaximumLength(25)
                 .When(x => !string.IsNullOrEmpty(x.Password));
 
-            RuleFor(x => x.Firstname)
+            RuleFor(x => x.Fullname)
                 .NotEmpty()
                 .MinimumLength(3)
-                .MaximumLength(100);
-
-            RuleFor(x => x.Lastname)
-                .NotEmpty()
-                .MinimumLength(3)
-                .MaximumLength(100);
+                .MaximumLength(200);
 
             RuleFor(x => x.Language)
                 .Must(x => Configs.AvailableLanguages.Contains(x));
