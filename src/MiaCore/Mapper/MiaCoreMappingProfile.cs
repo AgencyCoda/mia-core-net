@@ -30,6 +30,7 @@ namespace MiaCore.Mapper
             CreateMap<SaveUserRequest, MiaUser>();
             CreateMap<UpdateProfileRequest, MiaUser>();
             CreateMap<MiaUser, MiaUserDto>();
+            CreateMap<MiaUser, MiauserDetailedDto>();
             CreateMap<SaveCategoryRequest, MiaCategory>();
             CreateMap<MiaCategory, CategoryDto>();
             CreateMap<SaveBillingInfoRequest, MiaBillingInfo>();

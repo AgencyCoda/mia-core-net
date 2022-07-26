@@ -74,7 +74,7 @@ namespace MiaCore.Controllers
         [HttpPost("user/list")]
         [Authorize(Roles = Roles.AdminOrAdministrator)]
         public async Task<IActionResult> UserList(GenerictListRequest<MiaUser> request)
-        => Ok(await Mediator.Send(request.SetReturnType<MiaUserDto>()));
+        => Ok(await Mediator.Send(request.SetReturnType<MiauserDetailedDto>()));
 
         [HttpPost("user/plan/list")]
         [Authorize(Roles = Roles.Admin)]
