@@ -32,5 +32,7 @@ namespace MiaCore.Features
     {
         public string IdentificationFrontUrl { get; set; }
         public string IdentificationBackUrl { get; set; }
+        public string Language { get; set; }
+        public bool OtpEnabled { get; set; }
     }
 }
