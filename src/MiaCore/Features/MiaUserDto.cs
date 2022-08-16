@@ -23,6 +23,8 @@ namespace MiaCore.Features
         public int VerifiedStatus { get; set; }
         public int IdentificationType { get; set; }
         public decimal CredibilityPoints { get; set; }
+        public string Language { get; set; }
+        public bool OtpEnabled { get; set; }
         public List<MiaUserCategory> Categories { get; set; }
 
         public List<RequestChange> RequestChanges { get; set; }
@@ -32,7 +34,5 @@ namespace MiaCore.Features
     {
         public string IdentificationFrontUrl { get; set; }
         public string IdentificationBackUrl { get; set; }
-        public string Language { get; set; }
-        public bool OtpEnabled { get; set; }
     }
 }
