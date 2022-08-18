@@ -51,6 +51,9 @@ namespace MiaCore.Utils
         {
             var user = await _userRepository.GetAsync(userId);
 
+            if (user is null)
+                return;
+
             int[] adminRoles = { 4, 1, 5 };
             if (adminRoles.Contains(user.Role))
                 return;
