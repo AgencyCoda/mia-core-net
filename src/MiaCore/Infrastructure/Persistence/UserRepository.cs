@@ -14,14 +14,14 @@ namespace MiaCore.Infrastructure.Persistence
 
         public async Task<MiaUser> GetByEmailAsync(string email)
         {
-            var query = "select * from " + Tablename + " where email = @email";
+            var query = "select * from " + Tablename + " where email = @email and deleted = 0";
             return await Connection.QueryFirstOrDefaultAsync<MiaUser>(query, new { email });
         }
 
         public async Task<MiaUser> LoginAsync(string email, string password)
         {
             password = Hashing.GenerateSha256(password);
-            var query = "select * from " + Tablename + " where email = @email and password = @password";
+            var query = "select * from " + Tablename + " where email = @email and password = @password and deleted = 0";
             return await Connection.QueryFirstOrDefaultAsync<MiaUser>(query, new { email, password });
         }
     }
