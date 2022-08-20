@@ -28,6 +28,7 @@ namespace MiaCore.Models
         public decimal CredibilityPointsCreator { get; set; }
         public string Language { get; set; }
         public bool OtpEnabled { get; set; }
+        public bool WalletConnected { get; set; }
         [Relation]
         public List<MiaUserCategory> Categories { get; set; }
 
