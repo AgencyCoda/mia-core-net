@@ -3,14 +3,24 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <PackageId>MiaCore</PackageId>
-    <Version>3.3.44</Version>
+    <Version>3.3.45</Version>
     <Authors>Shota Chinchaladze</Authors>
     <Company>AgencyCoda</Company>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>3.3.44.0</AssemblyVersion>
-    <FileVersion>3.3.44.0</FileVersion>
+    <AssemblyVersion>3.3.45.0</AssemblyVersion>
+    <FileVersion>3.3.45.0</FileVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Infrastructure\Mail\TemplateMail.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="TemplateMail.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="automapper" Version="10.1.1" />

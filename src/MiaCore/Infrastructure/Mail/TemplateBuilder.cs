@@ -16,13 +16,15 @@ namespace MiaCore.Infrastructure.Mail
         {
             _templateRepository = templateRepository;
         }
-        public async Task<(string, string)> BuildAsync(string templateSlug, object args)
+        public async Task<(string, string)> BuildAsync(string email, string templateSlug, object args)
         {
             var template = await _templateRepository.GetByAsync(new Where(nameof(MiaEmailTemplate.Slug), templateSlug));
             if (template is null)
                 throw new Exception("template not found");
 
-            string body = replace(template.ContentText, args);
+            string content_text = getContentTemplate(template.Title, template.ContentText, templateSlug, email);
+
+            string body = replace(content_text, args);
             return (template.Title, body);
         }
 
@@ -47,6 +49,29 @@ namespace MiaCore.Infrastructure.Mail
                     dictionary.Add(propertyDescriptor.Name, val);
             }
             return dictionary;
+        }
+
+        private string getContentTemplate(string title, string content_text, string template_slug, string email)
+        {
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string templateMail = Path.Combine(baseDir, "TemplateMail.txt");
+
+            if (!File.Exists(templateMail))
+                throw new Exception("file template not found");
+
+            string str = File.ReadAllText(templateMail);
+
+            string lang = "<html lang=\"en\">";
+            template_slug = template_slug.Substring(template_slug.Length - 3);
+            if (template_slug == "-es")
+                lang = "<html lang=\"es\">";
+
+            str = str.Replace($"{{{{lang}}}}", lang, StringComparison.InvariantCultureIgnoreCase)
+                     .Replace($"{{{{title}}}}", title, StringComparison.InvariantCultureIgnoreCase)
+                     .Replace($"{{{{content_text}}}}", content_text, StringComparison.InvariantCultureIgnoreCase)
+                     .Replace($"{{{{email}}}}", email, StringComparison.InvariantCultureIgnoreCase);
+
+            return str;
         }
     }
 }
