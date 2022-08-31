@@ -3,21 +3,25 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <PackageId>MiaCore</PackageId>
-    <Version>3.3.45</Version>
+    <Version>3.3.46</Version>
     <Authors>Shota Chinchaladze</Authors>
     <Company>AgencyCoda</Company>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>3.3.45.0</AssemblyVersion>
-    <FileVersion>3.3.45.0</FileVersion>
+    <AssemblyVersion>3.3.46.0</AssemblyVersion>
+    <FileVersion>3.3.46.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Infrastructure\Mail\TemplateMail.txt" />
+    <None Remove="TemplateMailES.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="TemplateMail.txt">
+    <Content Include="TemplateMailEN.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TemplateMailES.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
