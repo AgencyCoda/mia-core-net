@@ -31,7 +31,7 @@ namespace MiaCore.Infrastructure.Mail
 
         public async Task SendAsync(string to, string subject, string templateSlug, object args)
         {
-            var (title, body) = await _templateBuilder.BuildAsync(templateSlug, args);
+            var (title, body) = await _templateBuilder.BuildAsync(to, templateSlug, args);
             var msg = new SendGridMessage()
             {
                 From = new EmailAddress(_options.EmailFrom, _options.EmailFromName),
