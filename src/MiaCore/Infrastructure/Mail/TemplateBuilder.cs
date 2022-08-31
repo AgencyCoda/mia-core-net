@@ -68,8 +68,8 @@ namespace MiaCore.Infrastructure.Mail
 
             str = str.Replace($"{{{{lang}}}}", lang, StringComparison.InvariantCultureIgnoreCase)
                      .Replace($"{{{{title}}}}", title, StringComparison.InvariantCultureIgnoreCase)
-                     .Replace($"{{{{content_text}}}}", content_text, StringComparison.InvariantCultureIgnoreCase)
-                     .Replace($"{{{{email}}}}", email, StringComparison.InvariantCultureIgnoreCase);
+                     .Replace($"{{{{email}}}}", email, StringComparison.InvariantCultureIgnoreCase)
+                     .Replace($"{{{{content_text}}}}", content_text, StringComparison.InvariantCultureIgnoreCase);
 
             return str;
         }
