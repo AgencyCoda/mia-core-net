@@ -56,14 +56,13 @@ namespace MiaCore.Infrastructure.Mail
 
         private string getContentTemplate(string title, string content_text, string template_slug)
         {
-            if (string.IsNullOrEmpty(_options.FontUrl))
-                throw new Exception("font url not found");
-
             string str = getContextText(template_slug);
 
             str = str.Replace($"{{{{title}}}}", title, StringComparison.InvariantCultureIgnoreCase)
-                     .Replace($"{{{{font_url}}}}", _options.FontUrl, StringComparison.InvariantCultureIgnoreCase)
                      .Replace($"{{{{content_text}}}}", content_text, StringComparison.InvariantCultureIgnoreCase);
+
+            if (!string.IsNullOrEmpty(_options.FontUrl))
+                str = str.Replace($"{{{{font_url}}}}", _options.FontUrl, StringComparison.InvariantCultureIgnoreCase);
 
             return str;
         }
