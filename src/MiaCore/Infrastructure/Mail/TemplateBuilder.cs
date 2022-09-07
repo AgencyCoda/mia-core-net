@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using MiaCore.Exceptions;
 using MiaCore.Infrastructure.Persistence;
 using MiaCore.Models;
 using Microsoft.Extensions.Options;
@@ -29,6 +30,14 @@ namespace MiaCore.Infrastructure.Mail
 
             string body = replace(content_text, args);
             return (template.Title, body);
+        }
+
+        public string GetTemplateSlug(string template, string language)
+        {
+            string lang = "en";
+            if (!string.IsNullOrEmpty(language))
+                lang = language;
+            return string.Concat(template, "-", lang);
         }
 
         private string replace(string str, object args)

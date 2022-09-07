@@ -10,6 +10,7 @@ namespace MiaCore
         public string SendgridApiKey { get; set; }
         public string FirebaseCredentialsFilePath { get; set; }
         public string FontUrl { get; set; }
+        public string FrontUrl { get; set; }
         public bool UseLoginEndpoint { get; set; } = true;
         public bool UseRegisterEndpoint { get; set; } = true;
         public bool UseRecoveryPasswordEndpoint { get; set; } = true;

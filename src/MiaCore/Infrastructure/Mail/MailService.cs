@@ -29,8 +29,9 @@ namespace MiaCore.Infrastructure.Mail
             var res = await _client.SendEmailAsync(msg);
         }
 
-        public async Task SendAsync(string to, string subject, string templateSlug, object args)
+        public async Task SendAsync(string to, string subject, string templateSlug, string language, object args)
         {
+            templateSlug = _templateBuilder.GetTemplateSlug(templateSlug, language);
             var (title, body) = await _templateBuilder.BuildAsync(templateSlug, args);
             var msg = new SendGridMessage()
             {
@@ -43,9 +44,9 @@ namespace MiaCore.Infrastructure.Mail
             var res = await _client.SendEmailAsync(msg);
         }
 
-        public void SendInBackground(string to, string subject, string templateSlug, object args)
+        public void SendInBackground(string to, string subject, string templateSlug, string language, object args)
         {
-            _ = Task.Run(async () => await SendAsync(to, subject, templateSlug, args));
+            _ = Task.Run(async () => await SendAsync(to, subject, templateSlug, language, args));
         }
 
         public void SendInBackground(string to, string subject, string message)
