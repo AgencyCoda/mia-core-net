@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using MiaCore.Exceptions;
+using MiaCore.Infrastructure.Mail;
 using MiaCore.Infrastructure.Persistence;
 using MiaCore.Models;
 using MiaCore.Utils;
@@ -19,14 +20,16 @@ namespace MiaCore.Features.Register
         private readonly MiaCoreOptions _options;
         private readonly IConfiguration _config;
         private readonly IUnitOfWork _uow;
+        private readonly IMailService _mailService;
 
-        public RegisterRequestHandler(IUserRepository userRepository, IMapper mapper, IOptions<MiaCoreOptions> options, IConfiguration config, IUnitOfWork uow)
+        public RegisterRequestHandler(IUserRepository userRepository, IMapper mapper, IOptions<MiaCoreOptions> options, IConfiguration config, IUnitOfWork uow, IMailService mailService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
             _config = config;
             _uow = uow;
+            _mailService = mailService;
         }
 
         public async Task<MiaUserDto> Handle(RegisterRequest request, CancellationToken cancellationToken)
@@ -58,6 +61,10 @@ namespace MiaCore.Features.Register
                     };
                     await requestChangeRepo.InsertAsync(requestChange);
                     await userSaveRepo.UpdateAsync(user);
+                }
+                else
+                {
+                    await _mailService.SendAsync(user.Email, "Sign-up successful", "successful-normal-registration", user.Language, new { fronturl = _options.FrontUrl });
                 }
 
                 await _uow.CommitTransactionAsync();
