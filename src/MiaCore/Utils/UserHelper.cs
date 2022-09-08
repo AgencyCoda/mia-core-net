@@ -75,22 +75,8 @@ namespace MiaCore.Utils
             log.CredibilityPointsCheckerAfter = user.CredibilityPointsChecker;
             log.CredibilityPointsCreatorAfter = user.CredibilityPointsCreator;
 
-            bool newTransopened = false;
-            try
-            {
-                newTransopened = await _uow.TryBeginTransactionAsync();
-                await _logRepository.InsertAsync(log);
-                await _userRepository.UpdateAsync(user);
-
-                if (newTransopened)
-                    await _uow.CommitTransactionAsync();
-            }
-            catch (Exception ex)
-            {
-                if (newTransopened)
-                    await _uow.RollbackTransactionAsync();
-                throw;
-            }
+            await _logRepository.InsertAsync(log);
+            await _userRepository.UpdateAsync(user);
         }
 
         public async Task SubtractCredibilityPointsAsync(long userId, CredibilityPointsChangeReason reason, decimal checkerPoints, decimal creatorPoints)
