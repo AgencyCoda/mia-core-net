@@ -113,9 +113,52 @@ namespace MiaCore.Infrastructure.Persistence
                         }
                     }
 
+                    if (where.Type == WhereConditionType.Likes)
+                    {
+                        if (where.Keys != null && where.Keys.Count() > 0)
+                        {
+                            var childTable = _table;
+                            var firstKey = where.Keys[0];
+                            if (!string.IsNullOrEmpty(firstKey))
+                            {
+                                var split = firstKey.Split(".");
+                                if (split.Count() == 2)
+                                {
+                                    var prop = _entityType.GetProperty(removeUndescores(split[0]), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                                    if (prop is null)
+                                        throw new Exception($"Error. Field:{split[1]} not found");
+                                    var isList = false;
+                                    if (typeof(IEnumerable).IsAssignableFrom(prop.PropertyType))
+                                        isList = true;
+
+                                    _joinCounter += 1;
+                                    childTable = convertName(isList ? prop.PropertyType.GenericTypeArguments[0].Name : prop.PropertyType.Name);
+                                    var alias = childTable + _joinCounter;
+
+                                    if (isList)
+                                        _localJoin += $" left join {childTable} as {alias} on {alias}.{getColumnName(_table)} = {_table}.id";
+                                    else
+                                        _localJoin += $" left join {childTable} as {alias} on {alias}.id = {_table}.{getColumnName(childTable)}";
+                                    childTable = alias;
+
+                                    List<string> newKeys = new List<string>();
+                                    foreach (var key in where.Keys)
+                                    {
+                                        var columnSplit = key.Split(".");
+                                        newKeys.Add(columnSplit[1]);
+                                    }
+                                    _where += " CONCAT_WS(' '," + string.Join(",", newKeys.Select(x => $"{childTable}.{convertName(x)}")) + $") regexp {where.Value}";
+                                }
+                                else
+                                {
+                                    _where += " CONCAT_WS(' '," + string.Join(",", where.Keys.Select(x => $"{childTable}.{convertName(x)}")) + $") regexp {where.Value}";
+                                }
+                            }
+                        }
+                    }
+
                     _where += where.Type switch
                     {
-                        WhereConditionType.Likes => " CONCAT_WS(' '," + string.Join(",", where.Keys.Select(x => $"{table}.{convertName(x)}")) + $") regexp {where.Value}",
                         WhereConditionType.In => $" {table}.{convertName(where.Key)} in ({where.Value})",
                         WhereConditionType.Between => $" {table}.{convertName(where.Key)} between '{where.From}' and '{where.To}'",
                         WhereConditionType.IsNull => $" {table}.{convertName(where.Key)} is null",
