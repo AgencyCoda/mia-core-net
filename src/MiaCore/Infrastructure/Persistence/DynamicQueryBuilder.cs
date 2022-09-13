@@ -159,6 +159,7 @@ namespace MiaCore.Infrastructure.Persistence
 
                     _where += where.Type switch
                     {
+                        WhereConditionType.Likes => "",
                         WhereConditionType.In => $" {table}.{convertName(where.Key)} in ({where.Value})",
                         WhereConditionType.Between => $" {table}.{convertName(where.Key)} between '{where.From}' and '{where.To}'",
                         WhereConditionType.IsNull => $" {table}.{convertName(where.Key)} is null",
