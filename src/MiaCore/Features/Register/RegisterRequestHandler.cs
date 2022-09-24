@@ -47,6 +47,10 @@ namespace MiaCore.Features.Register
 
                 var userSaveRepo = _uow.GetGenericRepository<MiaUser>();
                 var requestChangeRepo = _uow.GetGenericRepository<RequestChange>();
+                var points = _config.GetSection("CredibilityPoints:StartingPoints").Get<decimal>();
+                user.CredibilityPointsChecker = points;
+                user.CredibilityPointsCreator = points;
+                user.CredibilityPoints = points;
 
                 user.Id = await userSaveRepo.InsertAsync(user);
 
