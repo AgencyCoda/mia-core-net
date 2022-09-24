@@ -3,13 +3,13 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <PackageId>MiaCore</PackageId>
-    <Version>3.3.49</Version>
+    <Version>3.3.54</Version>
     <Authors>Shota Chinchaladze</Authors>
     <Company>AgencyCoda</Company>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>3.3.49.0</AssemblyVersion>
-    <FileVersion>3.3.49.0</FileVersion>
+    <AssemblyVersion>3.3.54.0</AssemblyVersion>
+    <FileVersion>3.3.54.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

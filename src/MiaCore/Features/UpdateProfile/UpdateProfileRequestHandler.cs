@@ -33,6 +33,9 @@ namespace MiaCore.Features.UpdateProfile
             if (user.VerifiedStatus == Models.Enums.MiaUserVerifiedStatus.Verified && (request.Fullname != user.Fullname || request.Photo != user.Photo))
                 throw new BadRequestException(ErrorMessages.VerifiedUserCanNotChangeData);
 
+            if (string.IsNullOrEmpty(request.Phone) && request.OtpEnabled)
+                throw new BadRequestException(ErrorMessages.PhoneInvalidWithOTPEnabled);
+
             user = _mapper.Map<UpdateProfileRequest, MiaUser>(request, user);
 
             await _userRepository.UpdateAsync(user);
