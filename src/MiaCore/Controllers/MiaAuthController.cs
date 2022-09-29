@@ -8,6 +8,7 @@ using MiaCore.Features.Firebase;
 using MiaCore.Features.GenerictList;
 using MiaCore.Features.Login;
 using MiaCore.Features.MiaDevices.Register;
+using MiaCore.Features.MiaPlan.Update;
 using MiaCore.Features.RecoveryPassword;
 using MiaCore.Features.Register;
 using MiaCore.Features.RemoveEntityById;
@@ -109,5 +110,14 @@ namespace MiaCore.Controllers
         {
             return Ok(await Mediator.Send(request));
         }
+
+        [HttpPost("mia-plan/list")]
+        public async Task<IActionResult> ListMiaPlan(GenerictListRequest<MiaPlan> request)
+        => Ok(await Mediator.Send(request));
+
+        [HttpPost("mia-plan/save")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> SaveMiaPlan(MiaPlanUpdateRequest request)
+        => Ok(await Mediator.Send(request));
     }
 }
