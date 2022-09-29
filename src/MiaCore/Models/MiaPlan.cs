@@ -7,6 +7,7 @@ namespace MiaCore.Models
         public string Slug { get; set; }
         public string Caption { get; set; }
         public decimal PriceMonth { get; set; }
+        public decimal PriceMonthUsd { get; set; }
         public decimal PriceYear { get; set; }
         public string PaypalPlanId { get; set; }
         public string Data { get; set; }
