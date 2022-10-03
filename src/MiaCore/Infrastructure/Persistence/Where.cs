@@ -35,6 +35,7 @@ namespace MiaCore.Infrastructure.Persistence
         In,
         Between,
         IsNull,
-        IsNotNull
+        IsNotNull,
+        NotEqual
     }
 }
