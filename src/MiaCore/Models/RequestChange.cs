@@ -10,6 +10,7 @@ namespace MiaCore.Models
         public string Message { get; set; }
         public int Status { get; set; }
         public string RejectReason { get; set; }
+        public bool VerifyEmailSent { get; set; }
     }
 
     public enum RequestChangeStatus

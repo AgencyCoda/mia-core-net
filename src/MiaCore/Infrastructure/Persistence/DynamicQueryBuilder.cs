@@ -164,6 +164,7 @@ namespace MiaCore.Infrastructure.Persistence
                         WhereConditionType.Between => $" {table}.{convertName(where.Key)} between '{where.From}' and '{where.To}'",
                         WhereConditionType.IsNull => $" {table}.{convertName(where.Key)} is null",
                         WhereConditionType.IsNotNull => $" {table}.{convertName(where.Key)} is not null",
+                        WhereConditionType.NotEqual => $" {table}.{convertName(where.Key)} <> {where.Value}",
                         _ => $" {table}.{convertName(where.Key)} = {where.Value}"
                     };
                 }
