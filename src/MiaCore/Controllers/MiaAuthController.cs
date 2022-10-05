@@ -112,6 +112,7 @@ namespace MiaCore.Controllers
         }
 
         [HttpPost("mia-plan/list")]
+        [AllowAnonymous]
         public async Task<IActionResult> ListMiaPlan(GenerictListRequest<MiaPlan> request)
         => Ok(await Mediator.Send(request));
 
