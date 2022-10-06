@@ -47,10 +47,8 @@ namespace MiaCore.Utils
             return _curentUser = user;
         }
 
-        public async Task AddCredibilityPointsAsync(long userId, CredibilityPointsChangeReason reason, decimal checkerPoints, decimal creatorPoints)
+        public async Task AddCredibilityPointsAsync(MiaUser user, CredibilityPointsChangeReason reason, decimal checkerPoints, decimal creatorPoints)
         {
-            var user = await _userRepository.GetAsync(userId);
-
             if (user is null)
                 return;
 
@@ -60,7 +58,7 @@ namespace MiaCore.Utils
 
             var log = new MiaUserCredibilityPointsChangeLog
             {
-                UserId = userId,
+                UserId = user.Id,
                 CredibilityPointsBefore = user.CredibilityPoints,
                 CredibilityPointsCheckerBefore = user.CredibilityPointsChecker,
                 CredibilityPointsCreatorBefore = user.CredibilityPointsCreator,
@@ -76,12 +74,11 @@ namespace MiaCore.Utils
             log.CredibilityPointsCreatorAfter = user.CredibilityPointsCreator;
 
             await _logRepository.InsertAsync(log);
-            await _userRepository.UpdateAsync(user);
         }
 
-        public async Task SubtractCredibilityPointsAsync(long userId, CredibilityPointsChangeReason reason, decimal checkerPoints, decimal creatorPoints)
+        public async Task SubtractCredibilityPointsAsync(MiaUser user, CredibilityPointsChangeReason reason, decimal checkerPoints, decimal creatorPoints)
         {
-            await AddCredibilityPointsAsync(userId, reason, checkerPoints * -1, creatorPoints * -1);
+            await AddCredibilityPointsAsync(user, reason, checkerPoints * -1, creatorPoints * -1);
         }
     }
 }
