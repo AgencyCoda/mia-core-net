@@ -13,5 +13,6 @@ namespace MiaCore.Features.Register
         public string Photo { get; set; }
         public string IdentificationFrontUrl { get; set; }
         public bool InstitutionRegistration { get; set; }
+        public string Language { get; set; }
     }
 }

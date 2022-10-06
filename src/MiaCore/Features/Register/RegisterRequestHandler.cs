@@ -7,6 +7,7 @@ using MiaCore.Exceptions;
 using MiaCore.Infrastructure.Mail;
 using MiaCore.Infrastructure.Persistence;
 using MiaCore.Models;
+using MiaCore.Models.Enums;
 using MiaCore.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -56,10 +57,10 @@ namespace MiaCore.Features.Register
 
                 if (request.InstitutionRegistration)
                 {
-                    user.Status = Models.Enums.MiaUserStatus.WaitingForValidation;
+                    user.Status = MiaUserStatus.WaitingForValidation;
                     var requestChange = new RequestChange
                     {
-                        NewRole = 4,
+                        NewRole = (int)MiaUserRole.Institution,
                         UserId = user.Id,
                         Message = "Institution Registration",
                         VerifyEmailSent = false
