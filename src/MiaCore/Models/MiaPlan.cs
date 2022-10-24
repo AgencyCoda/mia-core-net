@@ -13,5 +13,7 @@ namespace MiaCore.Models
         public string Data { get; set; }
         public string PaypalPlanIdYear { get; set; }
         public bool IsShow { get; set; }
+        public string MercadopagoPlanId { get; set; }
+        public string MercadopagoInitPoint { get; set; }
     }
 }
