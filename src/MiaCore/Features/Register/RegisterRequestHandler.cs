@@ -62,8 +62,7 @@ namespace MiaCore.Features.Register
                     {
                         NewRole = (int)MiaUserRole.Institution,
                         UserId = user.Id,
-                        Message = "Institution Registration",
-                        VerifyEmailSent = false
+                        Message = "Institution Registration"
                     };
                     await requestChangeRepo.InsertAsync(requestChange);
                     await userSaveRepo.UpdateAsync(user);

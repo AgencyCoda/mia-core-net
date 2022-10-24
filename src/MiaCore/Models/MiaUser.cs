@@ -29,6 +29,7 @@ namespace MiaCore.Models
         public string Language { get; set; }
         public bool OtpEnabled { get; set; }
         public bool WalletConnected { get; set; }
+        public bool VerifyEmailSent { get; set; }
         [Relation]
         public List<MiaUserCategory> Categories { get; set; }
 
