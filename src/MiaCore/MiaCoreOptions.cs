@@ -19,5 +19,6 @@ namespace MiaCore
         public bool UseUserListEndpoint { get; set; } = true;
         public bool UseCreateUserEndpoint { get; set; } = true;
         public bool UseLoginFirebaseEndpoint { get; set; } = true;
+        public bool SendPushNotifications { get; set; } = false;
     }
 }
