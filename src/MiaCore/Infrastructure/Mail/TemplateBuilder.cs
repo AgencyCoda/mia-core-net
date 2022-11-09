@@ -34,7 +34,7 @@ namespace MiaCore.Infrastructure.Mail
 
         public string GetTemplateSlug(string template, string language)
         {
-            string lang = "en";
+            string lang = "es";
             if (!string.IsNullOrEmpty(language))
                 lang = language;
             return string.Concat(template, "-", lang);
