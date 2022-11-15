@@ -96,13 +96,13 @@ namespace MiaCore.Infrastructure.Mail
                         <tr>
                             <td align='center' style='font-size:14px; padding:3em'>
                               <div>
-                                <img alt='eWire' width='74' height='68' style='display:block;line-height:1px;border:0' src='https://ewire.news/assets/img/logos/logo_white.png'>
+                                <img alt='eWire' width='74' height='68' style='display:block;line-height:1px;border:0' src='{{font_url}}/assets/img/logos/logo_white.png'>
                               </div>
                               {{content_text}}
                               <div style='background-color: #383838; height: 1px; margin: 2em 0;'></div>
                               <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'>Spontaneous coverages, reliable news</p>
-                              <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'>eWire &nbsp; | &nbsp; <a href='' target='_blank' data-saferedirecturl='' style='color: blue;'>notificaciones@ewire.news</a></p>
-                              <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'><a href='' target='_blank' data-saferedirecturl='' style='color: blue;'>Privacy policy</a> &nbsp; | &nbsp; <a href='' target='_blank' data-saferedirecturl='' style='color: blue;'>Terms and conditions</a></p>
+                              <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'>eWire &nbsp; | &nbsp; <a href='mailto:notificaciones@ewire.news' target='_blank' data-saferedirecturl='' style='color: blue;'>notificaciones@ewire.news</a></p>
+                              <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'><a href='{{font_url}}/legals/privacy-policy' target='_blank' data-saferedirecturl='' style='color: blue;'>Privacy policy</a> &nbsp; | &nbsp; <a href='{{font_url}}/legals/terms-and-conditions' target='_blank' data-saferedirecturl='' style='color: blue;'>Terms and conditions</a></p>
                               <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'>Copyright © 2022 eWire &nbsp; | &nbsp; All rights reserved</p>
                               <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'><a href='https://agencycoda.com/' target='_blank' data-saferedirecturl='' style='color: blue;'>Poweredy by Agencycoda</a></p>
                             </td>
@@ -135,12 +135,12 @@ namespace MiaCore.Infrastructure.Mail
                             <tr>
                                 <td align='center' style='font-size:14px; padding:3em'>
                                   <div>
-                                    <img alt='eWire' width='74' height='68' style='display:block;line-height:1px;border:0' src='https://ewire.news/assets/img/logos/logo_white.png'>
+                                    <img alt='eWire' width='74' height='68' style='display:block;line-height:1px;border:0' src='{{font_url}}/assets/img/logos/logo_white.png'>
                                   </div>
                                   {{content_text}}
                                   <div style='background-color: #383838; height: 1px; margin: 2em 0;'></div>
                                   <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'>Coberturas espontáneas, noticias confiables</p>
-                                  <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'>eWire &nbsp; | &nbsp; <a href='' target='_blank' data-saferedirecturl='' style='color: blue;'>notificaciones@ewire.news</a></p>
+                                  <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'>eWire &nbsp; | &nbsp; <a href='mailto:notificaciones@ewire.news' target='_blank' data-saferedirecturl='' style='color: blue;'>notificaciones@ewire.news</a></p>
                                   <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'><a href='{{font_url}}/legals/privacy-policy' target='_blank' data-saferedirecturl='' style='color: blue;'>Políticas y privacidad</a> &nbsp; | &nbsp; <a href='{{font_url}}/legals/terms-and-conditions' target='_blank' data-saferedirecturl='' style='color: blue;'>Términos y condiciones</a></p>
                                   <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'>Copyright © 2022 eWire &nbsp; | &nbsp; All rights reserved</p>
                                   <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'><a href='https://agencycoda.com/' target='_blank' data-saferedirecturl='' style='color: blue;'>Poweredy by Agencycoda</a></p>
