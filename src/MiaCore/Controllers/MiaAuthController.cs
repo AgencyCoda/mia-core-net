@@ -12,6 +12,7 @@ using MiaCore.Features.MiaPlan.Update;
 using MiaCore.Features.RecoveryPassword;
 using MiaCore.Features.Register;
 using MiaCore.Features.RemoveEntityById;
+using MiaCore.Features.RemoveUserMe;
 using MiaCore.Features.UpdateProfile;
 using MiaCore.Models;
 using MiaCore.Utils;
@@ -95,6 +96,10 @@ namespace MiaCore.Controllers
         {
             return Ok(await Mediator.Send(new RemoveEntityByIdRequest<MiaUser> { Id = id }));
         }
+
+        [HttpDelete("user/remove")]
+        public async Task<IActionResult> RemoveUserMe()
+        => Ok(await Mediator.Send(new RemoveUserMeRequest()));
 
         [HttpGet("user/fetch/{id}")]
         public async Task<IActionResult> FetchUser(long id, [FromQuery] string withs)
