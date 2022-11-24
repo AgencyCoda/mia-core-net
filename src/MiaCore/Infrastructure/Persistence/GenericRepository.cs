@@ -205,7 +205,7 @@ namespace MiaCore.Infrastructure.Persistence
         public virtual async Task<int> InsertAsync(T obj)
         {
             if (obj is BaseEntity entity)
-                entity.CreatedAt = DateTime.Now;
+                entity.CreatedAt = DateTime.UtcNow;
 
             var columns = getColumns();
             var columnsToInsert = String.Join(',', columns.Select(x => convertWithUnderscores(x)));
@@ -225,7 +225,7 @@ namespace MiaCore.Infrastructure.Persistence
             object id = prop.GetValue(obj);
 
             if (obj is BaseEntity entity)
-                entity.UpdatedAt = DateTime.Now;
+                entity.UpdatedAt = DateTime.UtcNow;
 
             var columns = getColumns();
             var columnsToUpdate = String.Join(',',
