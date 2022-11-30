@@ -36,6 +36,10 @@ namespace MiaCore.Infrastructure.Persistence
         Between,
         IsNull,
         IsNotNull,
-        NotEqual
+        NotEqual,
+        GreaterThan,
+        GreaterThanOrEqual,
+        LessThan,
+        LessThanOrEqual,
     }
 }

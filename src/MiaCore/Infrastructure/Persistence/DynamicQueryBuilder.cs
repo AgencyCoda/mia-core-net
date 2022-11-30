@@ -165,6 +165,10 @@ namespace MiaCore.Infrastructure.Persistence
                         WhereConditionType.IsNull => $" {table}.{convertName(where.Key)} is null",
                         WhereConditionType.IsNotNull => $" {table}.{convertName(where.Key)} is not null",
                         WhereConditionType.NotEqual => $" {table}.{convertName(where.Key)} <> {where.Value}",
+                        WhereConditionType.GreaterThan => $" {table}.{convertName(where.Key)} > {where.Value}",
+                        WhereConditionType.GreaterThanOrEqual => $" {table}.{convertName(where.Key)} >= {where.Value}",
+                        WhereConditionType.LessThan => $" {table}.{convertName(where.Key)} < {where.Value}",
+                        WhereConditionType.LessThanOrEqual => $" {table}.{convertName(where.Key)} <= {where.Value}",
                         _ => $" {table}.{convertName(where.Key)} = {where.Value}"
                     };
                 }
