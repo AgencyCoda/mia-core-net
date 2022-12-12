@@ -53,6 +53,9 @@ namespace MiaCore.Features.Register
                 user.CredibilityPointsCreator = points;
                 user.CredibilityPoints = points;
 
+                if (user.Language is null)
+                    user.Language = "es";
+
                 user.Id = await userSaveRepo.InsertAsync(user);
 
                 if (request.InstitutionRegistration)

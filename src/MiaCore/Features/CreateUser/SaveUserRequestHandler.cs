@@ -44,6 +44,10 @@ namespace MiaCore.Features.CreateUser
                 user.CredibilityPointsChecker = points;
                 user.CredibilityPointsCreator = points;
                 user.CredibilityPoints = points;
+
+                if (user.Language is null)
+                    user.Language = "es";
+
                 user.Id = await _userRepository.InsertAsync(user);
             }
             else
