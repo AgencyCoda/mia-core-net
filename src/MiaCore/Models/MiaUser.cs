@@ -30,6 +30,7 @@ namespace MiaCore.Models
         public bool OtpEnabled { get; set; }
         public bool WalletConnected { get; set; }
         public bool VerifyEmailSent { get; set; }
+        public string StripeCustomerId { get; set; }
         [Relation]
         public List<MiaUserCategory> Categories { get; set; }
 

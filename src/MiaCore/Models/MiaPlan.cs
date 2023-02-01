@@ -15,5 +15,7 @@ namespace MiaCore.Models
         public bool IsShow { get; set; }
         public string MercadopagoPlanId { get; set; }
         public string MercadopagoInitPoint { get; set; }
+        public string StripePlanId { get; set; }
+        public string StripePlanIdUsd { get; set; }
     }
 }
