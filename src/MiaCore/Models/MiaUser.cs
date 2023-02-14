@@ -31,6 +31,8 @@ namespace MiaCore.Models
         public bool WalletConnected { get; set; }
         public bool VerifyEmailSent { get; set; }
         public string StripeCustomerId { get; set; }
+        public string PaypalMerchantId { get; set; }
+
         [Relation]
         public List<MiaUserCategory> Categories { get; set; }
 
