@@ -83,7 +83,7 @@ namespace MiaCore.Infrastructure.Persistence
                 foreach (var where in wheres)
                 {
                     _where += !_where.StartsWith("where") ? "where" : " and";
-                    if (!long.TryParse(where.Value, out _))
+                    if (!long.TryParse(where.Value, out _) && where.Type != WhereConditionType.In)
                         where.Value = $"\"{where.Value}\"";
 
                     var table = _table;
