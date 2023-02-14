@@ -35,6 +35,9 @@ namespace MiaCore.Features.Login
             if (user.Status == MiaUserStatus.WaitingForValidation)
                 throw new UnauthorizedException(ErrorMessages.WaitingForValidation);
 
+            if (user.Status == MiaUserStatus.RejectedValidation)
+                throw new UnauthorizedException(ErrorMessages.RejectedValidation);
+
             var response = _mapper.Map<LoginResponseDto>(user);
             response.TokenType = "bearer";
             response.AccessToken = JWT.JwtHelper.GenerateToken(_options.JwtSecret, _options.TokenExpirationMinutes, user.Id.ToString(), user.Role);
