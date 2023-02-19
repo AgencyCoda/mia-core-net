@@ -218,6 +218,26 @@ namespace MiaCore.Infrastructure.Persistence
             return res;
         }
 
+        public virtual async Task InsertBatchAsync(IEnumerable<T> items)
+        {
+            if (items.Count() == 0)
+                return;
+
+            foreach (var obj in items)
+            {
+                if (obj is BaseEntity entity)
+                    entity.CreatedAt = DateTime.UtcNow;
+            }
+
+            var columns = getColumns();
+            var columnsToInsert = String.Join(',', columns.Select(x => convertWithUnderscores(x)));
+            var columnvalues = String.Join(',', columns.Select(x => "@" + x));
+
+            var cmd = @$"insert into {Tablename} ({columnsToInsert}) values({columnvalues});";
+
+            var res = await Connection.ExecuteAsync(cmd, items);
+        }
+
         public virtual async Task<bool> UpdateAsync(T obj)
         {
             Type t = obj.GetType();

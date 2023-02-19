@@ -6,6 +6,8 @@ namespace MiaCore.Models
     {
         public long Id { get; set; }
         public long UserId { get; set; }
+        [Relation]
+        public MiaUser User { get; set; }
         public int PlanId { get; set; }
         [Relation]
         public MiaPlan Plan { get; set; }
@@ -16,5 +18,6 @@ namespace MiaCore.Models
         public int ProviderId { get; set; }
         public string Data { get; set; }
         public int Status { get; set; }
+        public string ProviderSubscriptionId { get; set; }
     }
 }

@@ -16,6 +16,7 @@ namespace MiaCore.Infrastructure.Persistence
         Task<IEnumerable<T>> GetAllAsync();
         Task<GenericListResponse<T>> GetListAsync(List<Where> wheres = null, List<Order> orders = null, int? limit = null, int? page = null, string[] relatedEntities = null);
         Task<int> InsertAsync(T obj);
+        Task InsertBatchAsync(IEnumerable<T> items);
         Task<bool> UpdateAsync(T obj);
         Task<bool> DeleteAsync(object id);
     }

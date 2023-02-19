@@ -32,6 +32,18 @@ namespace MiaCore.Infrastructure.Mail
             return (template.Title, body);
         }
 
+        public async Task<(string, string)> BuildAsync(int templateId, object args)
+        {
+            var template = await _templateRepository.GetAsync(templateId);
+            if (template is null)
+                throw new Exception("template not found");
+
+            string content_text = getContentTemplate(template.Title, template.ContentText, template.Slug);
+
+            string body = replace(content_text, args);
+            return (template.Title, body);
+        }
+
         public string GetTemplateSlug(string template, string language)
         {
             string lang = "es";
@@ -78,7 +90,7 @@ namespace MiaCore.Infrastructure.Mail
 
         private string getContextText(string template_slug)
         {
-          string context_text = @"
+            string context_text = @"
             <!DOCTYPE html>
             <html lang='en'>
             <head>
@@ -103,7 +115,7 @@ namespace MiaCore.Infrastructure.Mail
                               <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'>Spontaneous coverages, reliable news</p>
                               <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'>eWire &nbsp; | &nbsp; <a href='mailto:notificaciones@ewire.news' target='_blank' data-saferedirecturl='' style='color: blue;'>notificaciones@ewire.news</a></p>
                               <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'><a href='{{font_url}}/legals/privacy-policy' target='_blank' data-saferedirecturl='' style='color: blue;'>Privacy policy</a> &nbsp; | &nbsp; <a href='{{font_url}}/legals/terms-and-conditions' target='_blank' data-saferedirecturl='' style='color: blue;'>Terms and conditions</a></p>
-                              <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'>Copyright © 2022 eWire &nbsp; | &nbsp; All rights reserved</p>
+                              <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'>Copyright ï¿½ 2022 eWire &nbsp; | &nbsp; All rights reserved</p>
                               <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'><a href='https://agencycoda.com/' target='_blank' data-saferedirecturl='' style='color: blue;'>Poweredy by Agencycoda</a></p>
                             </td>
                         </tr>
@@ -114,10 +126,10 @@ namespace MiaCore.Infrastructure.Mail
             </html>
             ";
 
-          string lang = template_slug.Substring(template_slug.Length - 3);
+            string lang = template_slug.Substring(template_slug.Length - 3);
             if (lang == "-es")
             {
-              context_text = @"
+                context_text = @"
                 <!DOCTYPE html>
                 <html lang='en'>
                 <head>
@@ -139,10 +151,10 @@ namespace MiaCore.Infrastructure.Mail
                                   </div>
                                   {{content_text}}
                                   <div style='background-color: #383838; height: 1px; margin: 2em 0;'></div>
-                                  <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'>Coberturas espontáneas, noticias confiables</p>
+                                  <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'>Coberturas espontï¿½neas, noticias confiables</p>
                                   <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'>eWire &nbsp; | &nbsp; <a href='mailto:notificaciones@ewire.news' target='_blank' data-saferedirecturl='' style='color: blue;'>notificaciones@ewire.news</a></p>
-                                  <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'><a href='{{font_url}}/legals/privacy-policy' target='_blank' data-saferedirecturl='' style='color: blue;'>Políticas y privacidad</a> &nbsp; | &nbsp; <a href='{{font_url}}/legals/terms-and-conditions' target='_blank' data-saferedirecturl='' style='color: blue;'>Términos y condiciones</a></p>
-                                  <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'>Copyright © 2022 eWire &nbsp; | &nbsp; All rights reserved</p>
+                                  <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'><a href='{{font_url}}/legals/privacy-policy' target='_blank' data-saferedirecturl='' style='color: blue;'>Polï¿½ticas y privacidad</a> &nbsp; | &nbsp; <a href='{{font_url}}/legals/terms-and-conditions' target='_blank' data-saferedirecturl='' style='color: blue;'>Tï¿½rminos y condiciones</a></p>
+                                  <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'>Copyright ï¿½ 2022 eWire &nbsp; | &nbsp; All rights reserved</p>
                                   <p style='font-weight:300; color:#6a6a6b; font-size:12px; line-height:1.5em; margin: 0.25em;'><a href='https://agencycoda.com/' target='_blank' data-saferedirecturl='' style='color: blue;'>Poweredy by Agencycoda</a></p>
                                 </td>
                             </tr>
