@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace MiaCore.Infrastructure.Persistence
@@ -16,7 +17,7 @@ namespace MiaCore.Infrastructure.Persistence
         public Where(string key, object value, WhereConditionType type)
         {
             Key = key;
-            Value = value.ToString();
+            Value = value is DateTime ? ((DateTime)value).ToString("s") : value.ToString();
             Type = type;
         }
 

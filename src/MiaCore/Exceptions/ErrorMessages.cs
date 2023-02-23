@@ -23,5 +23,6 @@ namespace MiaCore.Exceptions
         public static KeyValuePair<int, string> WaitingForValidation { get; } = new KeyValuePair<int, string>(-18, "You cannot login until we validate your identity");
         public static KeyValuePair<int, string> PhoneInvalidWithOTPEnabled { get; } = new KeyValuePair<int, string>(-19, "You cannot enable OTP until validate User Phone");
         public static KeyValuePair<int, string> RejectedValidation { get; } = new KeyValuePair<int, string>(-20, "You cannot login until we validate your identity");
+        public static KeyValuePair<int, string> PlanPriceChangeDateMustBeGreaterThanToday { get; } = new KeyValuePair<int, string>(-21, "Plan change date must be greater than today");
     }
 }
