@@ -27,6 +27,7 @@ namespace MiaCore.Features
         public bool OtpEnabled { get; set; }
         public bool WalletConnected { get; set; }
         public bool VerifyEmailSent { get; set; }
+        public bool UseArs { get; set; }
         public List<MiaUserCategory> Categories { get; set; }
 
         public List<RequestChange> RequestChanges { get; set; }
