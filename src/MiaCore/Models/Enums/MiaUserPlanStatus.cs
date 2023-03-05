@@ -4,6 +4,7 @@ namespace MiaCore.Models.Enums
     {
         Pending,
         Active,
+        Disabled,
         Cancelled
     }
 }
