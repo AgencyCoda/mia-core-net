@@ -36,6 +36,11 @@ namespace MiaCore.Features.UpdateProfile
             if (string.IsNullOrEmpty(request.Phone) && request.OtpEnabled)
                 throw new BadRequestException(ErrorMessages.PhoneInvalidWithOTPEnabled);
 
+            if(request.Language == null||request.Language == string.Empty)
+            {
+                request.Language = user.Language;
+            }
+
             user = _mapper.Map<UpdateProfileRequest, MiaUser>(request, user);
 
             await _userRepository.UpdateAsync(user);
