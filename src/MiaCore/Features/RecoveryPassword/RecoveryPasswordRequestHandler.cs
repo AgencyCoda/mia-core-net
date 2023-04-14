@@ -42,7 +42,7 @@ namespace MiaCore.Features.RecoveryPassword
 
             // var baseUrl = string.Format("https://{0}{1}", _context.Request.Host, _context.Request.Path);
 
-            await _mailService.SendAsync(user.Email, "Recovery Password", "recovery-password", user.Language, new { token, email = request.Email, request.BaseUrl });
+            await _mailService.SendAsync(user.Email, "Recovery Password", "recovery-password", user.Language, new { token, email = System.Web.HttpUtility.UrlEncode(request.Email), request.BaseUrl });
             return new { Success = true };
         }
     }
