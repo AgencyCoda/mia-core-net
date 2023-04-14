@@ -107,7 +107,7 @@ namespace MiaCore.Features.MiaPlan.Update
                 TemplateId = x.User.Language == "en" ? templateIdEn : templateIdEs,
                 Data = JsonSerializer.Serialize(new
                 {
-                    price_update_date = changeDate.ToString("yyyy-mm-dd")
+                    price_update_date = x.User.Language == "en" ? changeDate.ToString("mm/dd/yyyy") : changeDate.ToString("dd/mm/yyyy")
                 }),
                 Status = (int)MiaCore.Models.Enums.MiaEmailSentStatus.Pending
             });
