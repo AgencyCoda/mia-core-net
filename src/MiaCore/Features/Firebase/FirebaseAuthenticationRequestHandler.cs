@@ -41,12 +41,10 @@ namespace MiaCore.Features.Firebase
             var user = await _userRepository.GetByEmailAsync(firebaseUser.Email);
             if (user is null)
             {
-                var splitName = firebaseUser?.DisplayName?.Split(new char[] { ' ' }, 2);
                 user = new MiaUser
                 {
                     Email = firebaseUser.Email,
-                    Firstname = splitName is null ? null : splitName[0],
-                    Lastname = splitName is null || splitName.Length <= 1 ? null : splitName[1],
+                    Fullname = firebaseUser?.DisplayName,
                     Phone = firebaseUser.PhoneNumber,
                     Photo = firebaseUser.PhotoUrl
                 };
