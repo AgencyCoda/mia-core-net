@@ -31,6 +31,8 @@ namespace MiaCore.Models
         public bool WalletConnected { get; set; }
         public bool VerifyEmailSent { get; set; }
         public bool UseArs { get; set; }
+        public string BankAccountHolder { get; set; }
+        public string BankAccountId { get; set; }
 
         [Relation]
         public List<MiaUserCategory> Categories { get; set; }

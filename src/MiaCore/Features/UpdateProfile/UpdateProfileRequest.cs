@@ -12,5 +12,7 @@ namespace MiaCore.Features.UpdateProfile
         public string Caption { get; set; }
         public string Language { get; set; }
         public bool OtpEnabled { get; set; }
+        public string BankAccountHolder { get; set; }
+        public string BankAccountId { get; set; }
     }
 }
