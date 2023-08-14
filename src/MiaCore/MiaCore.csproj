@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <PackageId>MiaCore</PackageId>
-    <Version>4.1.7</Version>
+    <Version>4.1.10</Version>
     <Authors>Matias Camiletti</Authors>
     <Company>Tots</Company>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>

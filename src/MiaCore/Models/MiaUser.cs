@@ -33,6 +33,7 @@ namespace MiaCore.Models
         public bool UseArs { get; set; }
         public string BankAccountHolder { get; set; }
         public string BankAccountId { get; set; }
+        public string ValidationToken { get; set; }
 
         [Relation]
         public List<MiaUserCategory> Categories { get; set; }

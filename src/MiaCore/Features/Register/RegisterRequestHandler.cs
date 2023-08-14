@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -31,6 +32,16 @@ namespace MiaCore.Features.Register
             _config = config;
             _uow = uow;
             _mailService = mailService;
+        }
+        
+        private async Task<string> GenerateValidationTokenAsync()
+        {
+            var token = new byte[32];
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(token);
+            }
+            return Convert.ToBase64String(token);
         }
 
         public async Task<MiaUserDto> Handle(RegisterRequest request, CancellationToken cancellationToken)
@@ -72,7 +83,20 @@ namespace MiaCore.Features.Register
                 }
                 else
                 {
-                    await _mailService.SendAsync(user.Email, "Sign-up successful", "successful-normal-registration", user.Language, new { fronturl = _options.FrontUrl });
+                    user.ValidationToken = await GenerateValidationTokenAsync();
+                    user.Status = MiaUserStatus.ValidateEmail;
+                    await userSaveRepo.UpdateAsync(user);
+                    await _mailService.SendAsync(
+                        user.Email, 
+                        "Sign-up successful", 
+                        "successful-registration-with-validation", 
+                        user.Language, 
+                        new
+                        {
+                            backUrl = _options.BackUrl, 
+                            token = System.Web.HttpUtility.UrlEncode(user.ValidationToken), 
+                            email = System.Web.HttpUtility.UrlEncode(user.Email)
+                        });
                 }
 
                 await _uow.CommitTransactionAsync();
